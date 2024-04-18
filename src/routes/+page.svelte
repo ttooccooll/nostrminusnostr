@@ -165,8 +165,6 @@
         {/if}
     </div> -->
 
-    
-    
     <div class="right">
         <button on:click={login}>Login</button>
         {#if isLoading}
@@ -181,4 +179,5 @@
             {/await}
         {/if}
     </div>  
+
 </div>
