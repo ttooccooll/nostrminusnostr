@@ -240,3 +240,15 @@ footer {
     margin: 3em 3em 3em 3em;
     font-family: "60s";
 }
+
+button {
+    background-color:hsl(1, 68%, 53%);
+    color:hsl(28, 68%, 53%);
+    border: hsl(99, 68%, 53%) double 2px;
+    margin-top: 5px;
+    border-radius: 15px;
+    box-shadow: inset 0px -10px 25px hsl(612, 68%, 53%), 0px 5px 5px hsl(122, 68%, 53%);
+    font-family: cursive;
+    font-weight: 500;
+    padding: 2px;
+}

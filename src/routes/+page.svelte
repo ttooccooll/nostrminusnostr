@@ -16,9 +16,9 @@
         });
     }
 
-    // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
+    const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
     const eventsPromise = ndk.fetchEvents({kinds:[1], limit:100});
-    const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
+    // const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
     eventsPromise.then(fetchedEvents => {
         events = fetchedEvents;
@@ -28,19 +28,19 @@
         isLoading = false;
     });
 
-    profilesPromise.then(fetchedEvents => {
-        events = fetchedEvents;
-        isLoading = false;
-        if (events.content) {
-            const content = JSON.parse(events.content);
-            console.log('Parsed content:', content);
-        } else {
-            console.error('Error: No content to parse');
-        }
-    }).catch(error => {
-        console.error('Error fetching events:', error);
-        isLoading = false;
-    });
+    // profilesPromise.then(fetchedEvents => {
+    //     events = fetchedEvents;
+    //     isLoading = false;
+    //     if (events.content) {
+    //         const content = JSON.parse(events.content);
+    //         console.log('Parsed content:', content);
+    //     } else {
+    //         console.error('Error: No content to parse');
+    //     }
+    // }).catch(error => {
+    //     console.error('Error fetching events:', error);
+    //     isLoading = false;
+    // });
 
 
     console.log(user);
@@ -105,16 +105,11 @@
         });
     });
 
-    const user=null
-
     async function login() {
         const signer = new NDKNip07Signer;
         ndk.signer = signer;
         signer.user().then((user) => {
-            user.ndk = ndk;
-            user.fetchProfile().then((eventSet) => {
-                console.log(user);
-            })
+            console.log(user);
         });
     }
 
