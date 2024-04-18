@@ -243,12 +243,25 @@ footer {
 
 button {
     background-color:hsl(1, 68%, 53%);
-    color:hsl(28, 68%, 53%);
-    border: hsl(99, 68%, 53%) double 2px;
-    margin-top: 5px;
+    color:hsl(48, 68%, 53%);
+    border: hsl(99, 68%, 53%) solid 1px;
+    margin: 5px;
     border-radius: 15px;
-    box-shadow: inset 0px -10px 25px hsl(612, 68%, 53%), 0px 5px 5px hsl(122, 68%, 53%);
-    font-family: cursive;
-    font-weight: 500;
+    box-shadow: inset 0px -10px 25px hsl(612, 68%, 53%), 2px 6px 5px hsl(122, 68%, 53%), -1px -1px 5px hsl(122, 68%, 53%), inset 1px 1px 2px hsl(122, 68%, 53%), inset -1px -1px 2px hsl(122, 68%, 53%);
+    font-family: Papyrus;
+    font-size: 1em;
     padding: 2px;
+    width: 5em;
+    transform-style: preserve-3d;
+    transition:
+    .7s ease-in-out transform,
+    .7s ease-in-out box-shadow;
+    &:hover {
+        box-shadow:
+        inset 0px -10px 25px hsl(612, 68%, 53%),
+          3px 6px 15px hsl(139, 68%, 53%),
+          2px 7px 13px hsl(169, 68%, 53%), inset 1px 1px 2px hsl(122, 68%, 53%), inset -1px -1px 2px hsl(122, 68%, 53%);
+        transform: scale(10);
+        cursor: pointer;
+    }
 }

@@ -168,7 +168,7 @@
     
     
     <div class="right">
-        <button on:click={login}>Log in</button>
+        <button on:click={login}>Login</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
