@@ -17,7 +17,7 @@
     }
 
     const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
-    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:100});
+    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000});
     // const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
     eventsPromise.then(fetchedEvents => {
@@ -125,7 +125,7 @@
                     const content = event.content;
 
                     const wordCount = content.split(/\s+/).length;
-                    if (wordCount < 50) return false;
+                    if (wordCount < 100) return false;
 
                     const excludedWords = ["nostr", "relay", "client", "bitcoin", "btc", "tech", "technology", "mempool", "lightning", "ln"];
                     const pattern = excludedWords.join("|");
