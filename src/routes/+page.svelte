@@ -1,5 +1,5 @@
 <script>
-    import NDK from "@nostr-dev-kit/ndk";
+    import NDK, { NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
 
@@ -16,7 +16,7 @@
         });
     }
 
-    const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
+    // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
     const eventsPromise = ndk.fetchEvents({kinds:[1], limit:100});
     const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
@@ -105,6 +105,19 @@
         });
     });
 
+    const user=null
+
+    async function login() {
+        const signer = new NDKNip07Signer;
+        ndk.signer = signer;
+        signer.user().then((user) => {
+            user.ndk = ndk;
+            user.fetchProfile().then((eventSet) => {
+                console.log(user);
+            })
+        });
+    }
+
 </script>
 
 <div class="content">
@@ -160,6 +173,7 @@
     
     
     <div class="right">
+        <button on:click={login}>Log in</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
