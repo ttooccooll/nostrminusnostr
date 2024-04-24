@@ -14,12 +14,14 @@
     let isUserLoggedIn = false;
     let event = NDKEvent | null;
     let eventsFromSubscription = [];
+    // let filteredPubkeys = [];
 
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
             // fetchEventFromId();
             fetchEventFromSub();
+            // fetchKindZeroEvents()
         });
     }
     
@@ -117,16 +119,17 @@
     sub.on('event', (receivedEvent) => {
         const content = receivedEvent.content;
         const wordCount = content.split(/\s+/).length;
-        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "utxo", "mempool", "lightning", "ln"];
+        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
         const pattern = excludedWords.join("|");
         const regex = new RegExp(pattern, "i");
-        console.log(receivedEvent);
+        // console.log(receivedEvent);
         if (wordCount < 100 || regex.test(content)) {
             return;
         }
         
         // If the event passes the filters, add it to the eventsFromSubscription array
         eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
+        filteredPubkeys = [receivedEvent.pubkey];
     });
 
     sub.on('eose', () => {
@@ -138,6 +141,14 @@
     });
 }
 
+    // function fetchKindZeroEvents() {
+    //     const promise = ndk.fetchEvents({ kinds: [0], pubkeys: filteredPubkeys});
+    //     promise.then(fetchedEvents => {
+    //         console.log(events)
+    //     }).catch(error => {
+    //         console.error('Error fetching kind 0 events:', error);
+    //     });
+    // }
 
     function fetchEventFromId() {
         const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
@@ -194,9 +205,7 @@
                     const content = event.content;
                     console.log("Raw Event:", event);
                     const parsed = JSON.parse(content);
-                    console.log(content);
                     console.log(parsed);
-                    console.log(JSON.stringify(parsed)); 
                     return true;
                 }) as parsed}
                         <h2>{parsed.name}</h2>
