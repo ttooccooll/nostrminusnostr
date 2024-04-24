@@ -2,6 +2,7 @@
     import NDK, { NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
+    import { nip19 } from "nostr-tools";
 
     const ndk = new NDK({
         explicitRelayUrls: ["wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://relay.primal.net", "wss://nostr.land", "wss://nostr.wine", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com",],
@@ -9,16 +10,19 @@
 
     let isLoading = true;
     let events = []; 
+    let user = null;
+    let isUserLoggedIn = false; 
 
     if (browser) {
         ndk.connect().then(() => {
-            console.log('Connected' + explicitRelayUrls);
+            console.log('Connected');
         });
     }
-
-    const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
+    
+    // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
+    // console.log(user);
     const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000});
-    // const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
+    const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
     eventsPromise.then(fetchedEvents => {
         events = fetchedEvents;
@@ -28,22 +32,13 @@
         isLoading = false;
     });
 
-    // profilesPromise.then(fetchedEvents => {
-    //     events = fetchedEvents;
-    //     isLoading = false;
-    //     if (events.content) {
-    //         const content = JSON.parse(events.content);
-    //         console.log('Parsed content:', content);
-    //     } else {
-    //         console.error('Error: No content to parse');
-    //     }
-    // }).catch(error => {
-    //     console.error('Error fetching events:', error);
-    //     isLoading = false;
-    // });
-
-
-    console.log(user);
+    profilesPromise.then(fetchedEvents => {
+        events = fetchedEvents;
+        isLoading = false;
+    }).catch(error => {
+        console.error('Error fetching events:', error);
+        isLoading = false;
+    });
 
     function convertTimestamp(timestamp) {
         const date = new Date(timestamp * 1000);
@@ -108,10 +103,17 @@
     async function login() {
         const signer = new NDKNip07Signer;
         ndk.signer = signer;
-        signer.user().then((user) => {
+        try {
+            user = await signer.user();
+            user.ndk = ndk;
+            await user.fetchProfile();
+            isUserLoggedIn = true;
             console.log(user);
-        });
+        } catch (error) {
+            console.error("Error occurred during login:", error);
+        }
     }
+
 
 </script>
 
@@ -147,19 +149,25 @@
 
 
     <!-- <div class="right">
+        <button on:click={login}>Login</button>
         {#if isLoading}
-        <p class="loading">Horses: hold 'em.</p>
+            <p class="loading">Horses: hold 'em.</p>
         {:else}
             {#await profilesPromise then events}
                 {#each Array.from(events).filter(event => {
-                    console.log(event);
+                    const content = event.content;
+                    console.log("Raw Event:", event);
+                    const parsed = JSON.parse(content);
+                    console.log(content);
+                    console.log(parsed);
+                    console.log(JSON.stringify(parsed)); 
                     return true;
-                }) as event}
-                    <h2>{event.content}</h2>
-                    <p>
-                        <img src={user.profile?.image} class="click-me" alt="fdsa" />
-                    </p>
-                    <p>{event.pubkey}</p>
+                }) as parsed}
+                        <h2>{parsed.name}</h2>
+                        <p>
+                            <img src={parsed.picture} class="click-me" alt="fdsa" />
+                        </p>
+                        <p>{parsed.about}</p>
                 {/each}
             {/await}
         {/if}
@@ -170,6 +178,7 @@
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
+        {#if isUserLoggedIn}
             {#await user.fetchProfile() then events}
                 <h2>{user.profile?.name}</h2>
                 <p>
@@ -177,6 +186,7 @@
                 </p>
                 <p>{user.profile?.about}</p>
             {/await}
+            {/if}
         {/if}
     </div>  
 
