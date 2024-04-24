@@ -18,7 +18,6 @@
         ndk.connect().then(() => {
             console.log('Connected');
             fetchEventFromId();
-            fetchProfile();
         });
     }
     
@@ -112,10 +111,10 @@
     };
 
     function fetchEventFromId() {
-        const noteId = '';
+        const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
         ndk.fetchEvent(noteId).then((fetchedEvent) => {
-            console.log(event);
             event = fetchedEvent;
+            console.log(event);
         });
     };
 
@@ -136,6 +135,7 @@
 
 </script>
 
+
 <div class="content">
     <div class="left">
         {#if isLoading}
@@ -146,9 +146,9 @@
                     const content = event.content;
 
                     const wordCount = content.split(/\s+/).length;
-                    if (wordCount < 30) return false;
+                    if (wordCount < 50) return false;
 
-                    const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "technology", "mempool", "lightning", "ln"];
+                    const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "UTXO", "mempool", "lightning", "ln"];
                     const pattern = excludedWords.join("|");
                     const regex = new RegExp(pattern, "i");
                     if (regex.test(content)) return false;
