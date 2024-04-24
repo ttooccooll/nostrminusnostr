@@ -13,16 +13,17 @@
     let user = null;
     let isUserLoggedIn = false;
     let event = NDKEvent | null;
+    let eventsFromSubscription = [];
 
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
-            fetchEventFromId();
+            // fetchEventFromId();
+            fetchEventFromSub();
         });
     }
     
     // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
-    // console.log(user);
     const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000});
     const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
@@ -110,9 +111,38 @@
         });
     };
 
+    function fetchEventFromSub() {
+    const sub = ndk.subscribe({kinds: [1]});
+
+    sub.on('event', (receivedEvent) => {
+        const content = receivedEvent.content;
+        const wordCount = content.split(/\s+/).length;
+        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "utxo", "mempool", "lightning", "ln"];
+        const pattern = excludedWords.join("|");
+        const regex = new RegExp(pattern, "i");
+        console.log(receivedEvent);
+        if (wordCount < 100 || regex.test(content)) {
+            return;
+        }
+        
+        // If the event passes the filters, add it to the eventsFromSubscription array
+        eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
+    });
+
+    sub.on('eose', () => {
+        console.log('EOSE');
+    });
+
+    sub.on('notice', (notice) => {
+        console.log(notice);
+    });
+}
+
+
     function fetchEventFromId() {
         const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
-        ndk.fetchEvent(noteId).then((fetchedEvent) => {
+        // const decoded = nip19.decode(noteId);
+        ndk.fetchEvent({ids:[noteId], kinds:[1]}).then((fetchedEvent) => {
             event = fetchedEvent;
             console.log(event);
         });
@@ -137,32 +167,19 @@
 
 
 <div class="content">
+    
     <div class="left">
         {#if isLoading}
             <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
         {:else}
-            {#await eventsPromise then events}
-                {#each Array.from(events).filter(event => {
-                    const content = event.content;
-
-                    const wordCount = content.split(/\s+/).length;
-                    if (wordCount < 50) return false;
-
-                    const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "UTXO", "mempool", "lightning", "ln"];
-                    const pattern = excludedWords.join("|");
-                    const regex = new RegExp(pattern, "i");
-                    if (regex.test(content)) return false;
-
-                    return true;
-                }) as event}
-                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
-                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                        <p class="text">{event.content}</p>
-                        <p class="date">{convertTimestamp(event.created_at)}</p>
-                        <p class="peep">{event.pubkey}</p>
-                    </div>
-                {/each}
-            {/await}
+            {#each eventsFromSubscription as event}
+                <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                    <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
+                    <p class="text">{event.content}</p>
+                    <p class="date">{convertTimestamp(event.created_at)}</p>
+                    <p class="peep">{event.pubkey}</p>
+                </div>
+            {/each}
         {/if}
     </div>
 
@@ -204,6 +221,7 @@
                     <img src={user.profile?.image} class="click-me" alt="fdsa" />
                 </p>
                 <p>{user.profile?.about}</p>
+                <p>{user.profile?.lud16}</p>
             {/await}
             {/if}
         {/if}
