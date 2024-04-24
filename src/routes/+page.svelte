@@ -1,5 +1,5 @@
 <script>
-    import NDK, { NDKNip07Signer } from "@nostr-dev-kit/ndk";
+    import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
@@ -11,11 +11,13 @@
     let isLoading = true;
     let events = []; 
     let user = null;
-    let isUserLoggedIn = false; 
+    let isUserLoggedIn = false;
+    let event = NDKEvent | null;
 
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
+            fetchEventFromId();
         });
     }
     
@@ -100,6 +102,22 @@
         });
     });
 
+    function fetchProfile() {
+        const pr = '';
+        ndk.fetchProfile(pr).then((profile) => {
+            console.log(profile);
+            event = profile;
+        });
+    };
+
+    function fetchEventFromId() {
+        const noteId = '';
+        ndk.fetchEvent(noteId).then((fetchedEvent) => {
+            console.log(event);
+            event = fetchedEvent;
+        });
+    };
+
     async function login() {
         const signer = new NDKNip07Signer;
         ndk.signer = signer;
@@ -127,9 +145,9 @@
                     const content = event.content;
 
                     const wordCount = content.split(/\s+/).length;
-                    if (wordCount < 100) return false;
+                    if (wordCount < 30) return false;
 
-                    const excludedWords = ["nostr", "relay", "client", "bitcoin", "btc", "tech", "technology", "mempool", "lightning", "ln"];
+                    const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "technology", "mempool", "lightning", "ln"];
                     const pattern = excludedWords.join("|");
                     const regex = new RegExp(pattern, "i");
                     if (regex.test(content)) return false;
