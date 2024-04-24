@@ -5,7 +5,7 @@
     import { nip19 } from "nostr-tools";
 
     const ndk = new NDK({
-        explicitRelayUrls: ["wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://relay.primal.net", "wss://nostr.land", "wss://nostr.wine", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com",],
+        explicitRelayUrls: ["wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://relay.primal.net", "wss://nostr.land", "wss://nostr.wine", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com"],
     });
 
     let isLoading = true;
