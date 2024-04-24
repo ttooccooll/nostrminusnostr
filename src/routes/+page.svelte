@@ -18,6 +18,7 @@
         ndk.connect().then(() => {
             console.log('Connected');
             fetchEventFromId();
+            fetchProfile();
         });
     }
     
