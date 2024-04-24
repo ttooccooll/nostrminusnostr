@@ -119,7 +119,7 @@
     sub.on('event', (receivedEvent) => {
         const content = receivedEvent.content;
         const wordCount = content.split(/\s+/).length;
-        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
+        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
         const pattern = excludedWords.join("|");
         const regex = new RegExp(pattern, "i");
         // console.log(receivedEvent);
@@ -223,15 +223,15 @@
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
-        {#if isUserLoggedIn}
-            {#await user.fetchProfile() then events}
-                <h2>{user.profile?.name}</h2>
-                <p>
-                    <img src={user.profile?.image} class="click-me" alt="fdsa" />
-                </p>
-                <p>{user.profile?.about}</p>
-                <p>{user.profile?.lud16}</p>
-            {/await}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <h2>{user.profile?.name}</h2>
+                    <p>
+                        <img src={user.profile?.image} class="click-me" alt="fdsa" />
+                    </p>
+                    <p>{user.profile?.about}</p>
+                    <p>{user.profile?.lud16}</p>
+                {/await}
             {/if}
         {/if}
     </div>  
