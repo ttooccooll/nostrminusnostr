@@ -115,8 +115,8 @@
     };
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({kinds: [1], limit:500});
-        const subz = ndk.subscribe({kinds: [0], limit:100});
+        const sub = ndk.subscribe({kinds: [1], limit:1000});
+        const subz = ndk.subscribe({kinds: [0], limit:30});
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
@@ -222,6 +222,21 @@
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <h2>{user.profile?.name}</h2>
+                    <p>
+                        <img src={user.profile?.image} class="click-me" alt="fdsa" />
+                    </p>
+                    <p>{user.profile?.about}</p>
+                    <p>{user.profile?.lud16}</p>
+                {/await}
+            {/if}
+        {/if}
+        
+        {#if isLoading}
+            <p class="loading">Horses: hold 'em.</p>
+        {:else}
             {#each eventszFromSubscription as event}
                     <h2>{event.name}</h2>
                     <p>
@@ -256,23 +271,5 @@
             {/await}
         {/if}
     </div> -->
-
-    <!-- <div class="right">
-        <button on:click={login}>Login</button>
-        {#if isLoading}
-            <p class="loading">Horses: hold 'em.</p>
-        {:else}
-            {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
-                    <h2>{user.profile?.name}</h2>
-                    <p>
-                        <img src={user.profile?.image} class="click-me" alt="fdsa" />
-                    </p>
-                    <p>{user.profile?.about}</p>
-                    <p>{user.profile?.lud16}</p>
-                {/await}
-            {/if}
-        {/if}
-    </div>   -->
 
 </div>

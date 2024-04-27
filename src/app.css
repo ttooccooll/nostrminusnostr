@@ -63,6 +63,8 @@ p {
 }
 
 .click-me {
+    object-fit: cover;
+    overflow: hidden;
     font-weight: bolder;
     text-align: center;
     display: flex;
@@ -133,17 +135,17 @@ p {
     animation: run 1s linear forwards;
   }
 
-  @media screen and (max-width: 920px) {
+  @media screen and (max-width: 800px) {
     .note {
         position: relative;
         z-index: 4;
         margin: 1em 0 1em 0;
-        padding: 1em 1em 1em 1.5em;
+        padding: .1em .3em .3em .5em;
         background-color: hsl(279, 68%, 53%);
         overflow-y: hidden;
         border-radius: 50px;
         width: fit-content;
-        max-width: 90%;
+        max-width: 80%;
         box-shadow: inset 0px -10px 25px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
         font-family: Papyrus;
         font-size: 1.4em;
@@ -167,6 +169,19 @@ p {
     }
     .about {
         font-size: .75em;
+    }
+    .left {
+        position: relative;
+        z-index: 4;
+        margin: 3% 2% 0 2%;
+        max-width: 60%;
+    }
+    
+    .right {
+        max-width: 30%;
+        min-width:30%;
+        margin: 3% 6% 0 1%;
+        font-family: "60s";
     }
   }
 
