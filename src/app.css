@@ -36,11 +36,12 @@ h1 {
     position: relative;
     z-index: 4;
     margin: 3% 5% 0 3%;
-    max-width: 70%;
+    max-width: 60%;
 }
 
 .right {
     max-width: 30%;
+    min-width:30%;
     margin: 3% 5% 0 3%;
     font-family: "60s";
 }
@@ -97,8 +98,8 @@ p {
     font-family: Papyrus;
     font-size: 1.4em;
     transform:
-    rotateX(16deg)
-    rotateZ(8deg);
+    rotateX(8deg)
+    rotateZ(4deg);
     transform-style: preserve-3d;
     transition:
     .7s ease-in-out transform,
@@ -106,8 +107,8 @@ p {
   &:hover {
     transform:
       translate3d(8px, -26px, 10px)
-      rotateX(20deg)
-      rotateZ(4deg);
+      rotateX(10deg)
+      rotateZ(2deg);
     box-shadow:
     inset 0px -10px 25px hsl(699, 68%, 53%),
       3px 6px 15px hsl(139, 68%, 53%),
