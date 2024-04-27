@@ -57,7 +57,7 @@
         hoveredNote = event.currentTarget;
         try {
             const audio = new Audio('/drag.mp3');
-            audio.volume = 0.1;
+            audio.volume = 0.05;
             audio.play();
         } catch (error) {
             console.error('Error playing audio:', error);
@@ -68,7 +68,7 @@
         hoveredNote = event.currentTarget;
         try {
             const audio = new Audio('/buzz.mp3');
-            audio.volume = 0.1;
+            audio.volume = 0.05;
             audio.play();
         } catch (error) {
             console.error('Error playing audio:', error);
@@ -94,7 +94,7 @@
         note.classList.add('noterun');
         const audio = new Audio('/boom.mp3');
         audio.play();
-        audio.volume = 0.2;
+        audio.volume = 0.1;
         setTimeout(() => {
             note.remove();
         }, 1000);
@@ -147,7 +147,8 @@
             let filteredName = [];
             let filteredPicture = [];
             let filteredAbout = [];
-            let filteredLud16 = [];
+            let filteredWeb = [];
+            console.log(receivedEvent);
             try {
                 const parsedContent = JSON.parse(receivedEvent.content);
                 if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
@@ -155,7 +156,7 @@
                     filteredName = [parsedContent.name];
                     filteredPicture = [parsedContent.picture];
                     filteredAbout = [parsedContent.about];
-                    filteredLud16 = [parsedContent.lud16];
+                    filteredWeb = [parsedContent.website];
                 }
             } catch (error) {
                 console.error("Error parsing content:", error);
@@ -227,6 +228,7 @@
                         <img src={event.picture} class="click-me" alt="fdsa" />
                     </p>
                     <p class="about">{event.about}</p>
+                    <a class="peep" href="{event.website}" target="blank">This link is to this person's website. It may be safe, but it also may not be safe. Please use caution.</a>
             {/each}
         {/if}
     </div>
