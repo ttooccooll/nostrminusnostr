@@ -147,6 +147,7 @@
             let filteredName = [];
             let filteredPicture = [];
             let filteredAbout = [];
+            let filteredLud16 = [];
             try {
                 const parsedContent = JSON.parse(receivedEvent.content);
                 if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
@@ -154,6 +155,7 @@
                     filteredName = [parsedContent.name];
                     filteredPicture = [parsedContent.picture];
                     filteredAbout = [parsedContent.about];
+                    filteredLud16 = [parsedContent.lud16];
                 }
             } catch (error) {
                 console.error("Error parsing content:", error);
@@ -220,7 +222,7 @@
             <p class="loading">Horses: hold 'em.</p>
         {:else}
             {#each eventszFromSubscription as event}
-                    <h2 class="text">{event.name}</h2>
+                    <h2>{event.name}</h2>
                     <p>
                         <img src={event.picture} class="click-me" alt="fdsa" />
                     </p>
