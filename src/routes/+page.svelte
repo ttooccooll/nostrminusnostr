@@ -115,8 +115,8 @@
     };
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({kinds: [1], limit:1500});
-        const subz = ndk.subscribe({kinds: [0], limit:30});
+        const sub = ndk.subscribe({kinds: [1]});
+        const subz = ndk.subscribe({kinds: [0]});
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
