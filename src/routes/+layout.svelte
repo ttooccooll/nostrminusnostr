@@ -8,7 +8,6 @@
 </div>
 
 <footer>
-
   <p>
     Check me out away from nostr at <a href="https://stacker.news/jasonb" target="_blank">Stacker News</a>.
   </p>
@@ -20,5 +19,4 @@
   <p>
     It's like <a href="https://garfieldminusgarfield.net" target="_blank">garfieldminusgarfield</a>, but not really.
   </p>
-  <button on:click={login}>Login</button>
 </footer>

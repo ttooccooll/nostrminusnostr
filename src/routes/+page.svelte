@@ -27,7 +27,7 @@
     }
     
     // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
-    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:100});
+    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000});
     const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
     eventsPromise.then(fetchedEvents => {
@@ -115,7 +115,7 @@
     };
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({kinds: [1], limit:1000});
+        const sub = ndk.subscribe({kinds: [1], limit:500});
         const subz = ndk.subscribe({kinds: [0], limit:100});
 
         sub.on('event', (receivedEvent) => {
@@ -215,6 +215,7 @@
     </div>
 
     <div class="right">
+        <button on:click={login}>Login</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
