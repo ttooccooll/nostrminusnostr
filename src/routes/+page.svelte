@@ -14,6 +14,7 @@
     let isUserLoggedIn = false;
     let event = NDKEvent | null;
     let eventsFromSubscription = [];
+    let eventszFromSubscription = [];
     // let filteredPubkeys = [];
 
     if (browser) {
@@ -26,7 +27,7 @@
     }
     
     // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
-    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000});
+    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:100});
     const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
 
     eventsPromise.then(fetchedEvents => {
@@ -114,32 +115,51 @@
     };
 
     function fetchEventFromSub() {
-    const sub = ndk.subscribe({kinds: [1]});
+        const sub = ndk.subscribe({kinds: [1], limit:100});
+        const subz = ndk.subscribe({kinds: [0], limit:100});
 
-    sub.on('event', (receivedEvent) => {
-        const content = receivedEvent.content;
-        const wordCount = content.split(/\s+/).length;
-        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
-        const pattern = excludedWords.join("|");
-        const regex = new RegExp(pattern, "i");
-        // console.log(receivedEvent);
-        if (wordCount < 100 || regex.test(content)) {
-            return;
-        }
-        
-        // If the event passes the filters, add it to the eventsFromSubscription array
-        eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
-        filteredPubkeys = [receivedEvent.pubkey];
-    });
+        sub.on('event', (receivedEvent) => {
+            const content = receivedEvent.content;
+            const wordCount = content.split(/\s+/).length;
+            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
+            const pattern = excludedWords.join("|");
+            const regex = new RegExp(pattern, "i");
+            // console.log(receivedEvent);
+            if (wordCount < 100 || regex.test(content)) {
+                return;
+            }
+            
+            // If the event passes the filters, add it to the eventsFromSubscription array
+            eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
+            filteredPubkeys = [receivedEvent.pubkey];
+        });
 
-    sub.on('eose', () => {
-        console.log('EOSE');
-    });
+        sub.on('eose', () => {
+            console.log('EOSE');
+        });
 
-    sub.on('notice', (notice) => {
-        console.log(notice);
-    });
-}
+        sub.on('notice', (notice) => {
+            console.log(notice);
+        });
+
+        subz.on('event', (receivedEvent) => {
+            console.log(receivedEvent);
+            let filteredName = [];
+            let filteredPicture = [];
+            let filteredAbout = [];
+            try {
+                const parsedContent = JSON.parse(receivedEvent.content);
+                if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
+                    eventszFromSubscription.push(parsedContent);
+                    filteredName = [parsedContent.name];
+                    filteredPicture = [parsedContent.picture];
+                    filteredAbout = [parsedContent.about];
+                }
+            } catch (error) {
+                console.error("Error parsing content:", error);
+            }
+        });
+    }
 
     // function fetchKindZeroEvents() {
     //     const promise = ndk.fetchEvents({ kinds: [0], pubkeys: filteredPubkeys});
@@ -194,6 +214,20 @@
         {/if}
     </div>
 
+    <div class="right">
+        {#if isLoading}
+            <p class="loading">Horses: hold 'em.</p>
+        {:else}
+            {#each eventszFromSubscription as event}
+                    <h2 class="text">{event.name}</h2>
+                    <p>
+                        <img src={event.picture} class="click-me" alt="fdsa" />
+                    </p>
+                    <p class="about">{event.about}</p>
+            {/each}
+        {/if}
+    </div>
+
 
     <!-- <div class="right">
         <button on:click={login}>Login</button>
@@ -218,7 +252,7 @@
         {/if}
     </div> -->
 
-    <div class="right">
+    <!-- <div class="right">
         <button on:click={login}>Login</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
@@ -234,6 +268,6 @@
                 {/await}
             {/if}
         {/if}
-    </div>  
+    </div>   -->
 
 </div>

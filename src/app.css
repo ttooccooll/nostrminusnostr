@@ -21,6 +21,7 @@ h1 {
 
 .content {
     margin: 0 1% 0 1%;
+    overflow: hidden;
     position: relative;
     z-index: 4;
     display: flex;
@@ -35,11 +36,12 @@ h1 {
     position: relative;
     z-index: 4;
     margin: 3% 5% 0 3%;
-    width: 70%;
+    max-width: 70%;
 }
 
 .right {
-    width: 30%;
+    max-width: 30%;
+    margin: 3% 5% 0 3%;
     font-family: "60s";
 }
 
@@ -185,6 +187,7 @@ a:visited {
 
 .text {
     white-space: pre-wrap;
+    font-size: larger;
 }
 
 .peep {
@@ -200,6 +203,10 @@ a:visited {
 
 .comments_counter {
     color: hsl(699, 68%, 53%);
+}
+
+.about {
+    width: 60%;
 }
 
 .loading {
