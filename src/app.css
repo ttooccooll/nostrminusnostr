@@ -191,7 +191,11 @@ p {
         width: 6em;
     }
     h2 {
-        font-size: 1em;
+        font-size: .75em;
+        overflow: hidden;
+    }
+    .peep {
+        font-size: .4em;
     }
   }
 
