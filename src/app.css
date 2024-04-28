@@ -185,6 +185,10 @@ p {
         margin: 3% 10% 0 1%;
         font-family: "60s";
     }
+    .click-me {
+        height: 6em;
+        width: 6em;
+    }
   }
 
 a {
@@ -261,7 +265,6 @@ a:visited {
     overflow-y: hidden;
     text-wrap: wrap;
     width: 100%;
-    margin-top: 0;
     margin-bottom: 0;
     font-size: .75em;
 }

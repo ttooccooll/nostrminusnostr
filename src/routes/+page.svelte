@@ -115,8 +115,8 @@
     };
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({kinds: [1]});
-        const subz = ndk.subscribe({kinds: [0]});
+        const sub = ndk.subscribe({kinds: [1], limit:1000});
+        const subz = ndk.subscribe({kinds: [0], limit:100});
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
@@ -148,7 +148,7 @@
             let filteredPicture = [];
             let filteredAbout = [];
             let filteredWeb = [];
-            console.log(receivedEvent);
+            // console.log(receivedEvent);
             try {
                 const parsedContent = JSON.parse(receivedEvent.content);
                 if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
@@ -247,29 +247,5 @@
             {/each}
         {/if}
     </div>
-
-
-    <!-- <div class="right">
-        <button on:click={login}>Login</button>
-        {#if isLoading}
-            <p class="loading">Horses: hold 'em.</p>
-        {:else}
-            {#await profilesPromise then events}
-                {#each Array.from(events).filter(event => {
-                    const content = event.content;
-                    console.log("Raw Event:", event);
-                    const parsed = JSON.parse(content);
-                    console.log(parsed);
-                    return true;
-                }) as parsed}
-                        <h2>{parsed.name}</h2>
-                        <p>
-                            <img src={parsed.picture} class="click-me" alt="fdsa" />
-                        </p>
-                        <p>{parsed.about}</p>
-                {/each}
-            {/await}
-        {/if}
-    </div> -->
 
 </div>
