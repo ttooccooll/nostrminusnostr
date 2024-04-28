@@ -15,14 +15,12 @@
     let event = NDKEvent | null;
     let eventsFromSubscription = [];
     let eventszFromSubscription = [];
-    // let filteredPubkeys = [];
 
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
             // fetchEventFromId();
             fetchEventFromSub();
-            // fetchKindZeroEvents()
         });
     }
     
@@ -115,8 +113,8 @@
     };
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({kinds: [1], limit:1000}, {closeOnEose:false});
-        const subz = ndk.subscribe({kinds: [0], limit:100}, {closeOnEose:false});
+        const sub = ndk.subscribe({ kinds: [1], limit: 1000 }, { closeOnEose: false });
+        const subz = ndk.subscribe({ kinds: [0], limit: 100 }, { closeOnEose: false });
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
@@ -124,14 +122,20 @@
             const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
-            // console.log(receivedEvent);
+            
             if (wordCount < 100 || regex.test(content)) {
                 return;
             }
-            
-            // If the event passes the filters, add it to the eventsFromSubscription array
+
             eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
-            filteredPubkeys = [receivedEvent.pubkey];
+
+            // Fetch kind 0 events corresponding to the pubkey
+            const pubkey = receivedEvent.pubkey;
+            ndk.fetchEvents({ kinds: [0], pubkeys: [pubkey] }).then(fetchedEvents => {
+                eventszFromSubscription = [...eventszFromSubscription, ...fetchedEvents];
+            }).catch(error => {
+                console.error('Error fetching kind 0 events:', error);
+            });
         });
 
         sub.on('eose', () => {
@@ -143,35 +147,22 @@
         });
 
         subz.on('event', (receivedEvent) => {
-            console.log(receivedEvent);
-            let filteredName = [];
-            let filteredPicture = [];
-            let filteredAbout = [];
-            let filteredWeb = [];
-            // console.log(receivedEvent);
+            console.log("Received event:", receivedEvent);
             try {
                 const parsedContent = JSON.parse(receivedEvent.content);
+                console.log("Parsed content:", parsedContent);
                 if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
-                    eventszFromSubscription.push(parsedContent);
-                    filteredName = [parsedContent.name];
-                    filteredPicture = [parsedContent.picture];
-                    filteredAbout = [parsedContent.about];
-                    filteredWeb = [parsedContent.website];
+                        eventszFromSubscription.push(parsedContent);
+                        filteredName.push(parsedContent.name);
+                        filteredPicture.push(parsedContent.picture);
+                        filteredAbout.push(parsedContent.about);
+                        filteredWeb.push(parsedContent.website);
                 }
             } catch (error) {
                 console.error("Error parsing content:", error);
             }
         });
     }
-
-    // function fetchKindZeroEvents() {
-    //     const promise = ndk.fetchEvents({ kinds: [0], pubkeys: filteredPubkeys});
-    //     promise.then(fetchedEvents => {
-    //         console.log(events)
-    //     }).catch(error => {
-    //         console.error('Error fetching kind 0 events:', error);
-    //     });
-    // }
 
     function fetchEventFromId() {
         const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
@@ -246,7 +237,7 @@
                     <p>
                         <img src={event.picture} class="click-me" alt="fdsa" />
                     </p>
-                    <p class="about">{event.about}</p>
+                    <p class="about">{@html parseContent(event.about)}</p>
                     <a class="peep" href="{event.website}" target="blank">{event.name}'s Website</a>
             {/each}
         {/if}
