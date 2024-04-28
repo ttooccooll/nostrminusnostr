@@ -58,6 +58,7 @@ h2 {
     transform:
     rotateX(-16deg)
     rotateZ(-8deg);
+    word-wrap: break-word;
 }
 
 p {
@@ -171,19 +172,18 @@ p {
     }
     .about {
         font-size: .75em;
-        word-wrap: break-word;
     }
     .left {
         position: relative;
         z-index: 4;
-        margin: 3% 2% 0 2%;
-        max-width: 70%;
+        margin: 3% 0 0 2%;
+        max-width: 80%;
     }
     
     .right {
         max-width: 20%;
         min-width: 20%;
-        margin: 3% 10% 0 1%;
+        margin: 3% 10% 0 -2%;
         font-family: "60s";
     }
     .click-me {
@@ -196,7 +196,7 @@ p {
   }
 
 a {
-    color: hsl(146, 68%, 53%);
+    color: hsl(400, 68%, 53%);
     text-decoration: none;
 }
 
@@ -262,6 +262,7 @@ a:visited {
     color: hsl(536, 68%, 53%);
     font-size: .75em;
     margin-top: 0;
+    word-wrap: break-word;
 }
 
 .date {
@@ -279,6 +280,7 @@ a:visited {
 
 .about {
     width: 90%;
+    word-wrap: break-word;
 }
 
 .loading {

@@ -196,6 +196,10 @@
         }
     }
 
+    function parseContent(content) {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        return content.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
+    }
 
 </script>
 
@@ -209,7 +213,7 @@
             {#each eventsFromSubscription as event}
                 <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                     <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                    <p class="text">{event.content}</p>
+                    <p class="text">{@html parseContent(event.content)}</p>
                     <p class="date">{convertTimestamp(event.created_at)}</p>
                     <p class="peep">{event.pubkey}</p>
                 </div>
