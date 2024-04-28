@@ -243,7 +243,7 @@
                         <img src={event.picture} class="click-me" alt="fdsa" />
                     </p>
                     <p class="about">{event.about}</p>
-                    <a class="peep" href="{event.website}" target="blank">This link is to this person's website. It may be safe, but it also may not be safe. Please use caution.</a>
+                    <a class="peep" href="{event.website}" target="blank">{event.name}'s Website</a>
             {/each}
         {/if}
     </div>
