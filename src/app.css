@@ -171,6 +171,7 @@ p {
     }
     .about {
         font-size: .75em;
+        word-wrap: break-word;
     }
     .left {
         position: relative;
@@ -188,6 +189,9 @@ p {
     .click-me {
         height: 6em;
         width: 6em;
+    }
+    h2 {
+        font-size: 1.25em;
     }
   }
 
