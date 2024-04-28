@@ -5,7 +5,7 @@
     import { nip19 } from "nostr-tools";
 
     const ndk = new NDK({
-        explicitRelayUrls: ["wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://relay.primal.net", "wss://nostr.land", "wss://nostr.wine", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom"],
+        explicitRelayUrls: ["wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://relay.primal.net", "wss://nostr.land", "wss://nostr.wine", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom"],
     });
 
     let isLoading = true;
@@ -115,8 +115,8 @@
     };
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({kinds: [1], limit:1000});
-        const subz = ndk.subscribe({kinds: [0], limit:100});
+        const sub = ndk.subscribe({kinds: [1], limit:1000}, {closeOnEose:false});
+        const subz = ndk.subscribe({kinds: [0], limit:100}, {closeOnEose:false});
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
