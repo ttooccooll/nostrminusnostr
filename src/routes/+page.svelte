@@ -5,7 +5,7 @@
     import { nip19 } from "nostr-tools";
 
     const ndk = new NDK({
-        explicitRelayUrls: ["wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://relay.primal.net", "wss://nostr.land", "wss://nostr.wine", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom"],
+        explicitRelayUrls: ["wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom"],
     });
 
     let isLoading = true;
@@ -15,6 +15,11 @@
     let event = NDKEvent | null;
     let eventsFromSubscription = [];
     let eventszFromSubscription = [];
+    let filteredName = [];
+    let filteredPicture = [];
+    let filteredAbout = [];
+    let filteredWeb = [];
+
 
     if (browser) {
         ndk.connect().then(() => {
@@ -116,6 +121,8 @@
         const sub = ndk.subscribe({ kinds: [1], limit: 1000 }, { closeOnEose: false });
         const subz = ndk.subscribe({ kinds: [0], limit: 100 }, { closeOnEose: false });
 
+        let matchedEvents = [];
+
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
             const wordCount = content.split(/\s+/).length;
@@ -127,42 +134,52 @@
                 return;
             }
 
+            console.log(event)
+            // Add kind 1 event to matchedEvents array
+            matchedEvents.push(receivedEvent);
             eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
+        });
 
-            // Fetch kind 0 events corresponding to the pubkey
-            const pubkey = receivedEvent.pubkey;
-            ndk.fetchEvents({ kinds: [0], pubkeys: [pubkey] }).then(fetchedEvents => {
-                eventszFromSubscription = [...eventszFromSubscription, ...fetchedEvents];
-            }).catch(error => {
-                console.error('Error fetching kind 0 events:', error);
+            sub.on('eose', () => {
+                console.log('End of stream for sub');
+                // Fetch kind 0 events corresponding to the matched pubkeys
+                ndk.fetchEvents({ kinds: [0], pubkeys: matchedPubkeys }).then(fetchedEvents => {
+                    // Add filtered kind 0 events to eventszFromSubscription
+                    eventszFromSubscription.push(...fetchedEvents);
+                }).catch(error => {
+                    console.error('Error fetching kind 0 events:', error);
+                });
             });
-        });
 
-        sub.on('eose', () => {
-            console.log('EOSE');
-        });
+            // Handle end of stream event for subz
+            subz.on('eose', () => {
+                console.log('End of stream for subz');
+            });
 
-        sub.on('notice', (notice) => {
-            console.log(notice);
-        });
+            // Handle notice event for subz
+            subz.on('notice', (notice) => {
+                console.log('Notice for subz:', notice);
+            });
 
+        // Handle kind 0 events
         subz.on('event', (receivedEvent) => {
-            console.log("Received event:", receivedEvent);
             try {
                 const parsedContent = JSON.parse(receivedEvent.content);
                 console.log("Parsed content:", parsedContent);
                 if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
-                        eventszFromSubscription.push(parsedContent);
-                        filteredName.push(parsedContent.name);
-                        filteredPicture.push(parsedContent.picture);
-                        filteredAbout.push(parsedContent.about);
-                        filteredWeb.push(parsedContent.website);
+                    // Add kind 0 events to eventszFromSubscription
+                    eventszFromSubscription.push(parsedContent);
+                    filteredName.push(parsedContent.name);
+                    filteredPicture.push(parsedContent.picture);
+                    filteredAbout.push(parsedContent.about);
+                    filteredWeb.push(parsedContent.website);
                 }
             } catch (error) {
                 console.error("Error parsing content:", error);
             }
         });
     }
+
 
     function fetchEventFromId() {
         const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
