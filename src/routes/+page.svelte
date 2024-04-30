@@ -6,7 +6,7 @@
     import { writable } from 'svelte/store';
 
     const ndk = new NDK({
-        explicitRelayUrls: ["wss://nostr.thank.eu", "wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
+        explicitRelayUrls: ["wss://nos.lol", "wss://nostr.thank.eu", "wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
     });
 
     let isLoading = true;
@@ -97,15 +97,21 @@
     }
 
     function handleDestroy(event) {
-        const note = event.currentTarget.parentNode;
-        note.classList.add('noterun');
-        const audio = new Audio('/boom.mp3');
-        audio.play();
-        audio.volume = 0.1;
+    const note = event.currentTarget.parentNode;
+    note.classList.add('noterun');
+    const audio = new Audio('/boom.mp3');
+    audio.play();
+    audio.volume = 0.1;
+    setTimeout(() => {
+        const grandparentNode = note.parentNode.parentNode;
+        grandparentNode.classList.add('leftrun');
         setTimeout(() => {
-            note.remove();
+            grandparentNode.remove();
         }, 1000);
-    }
+    }, 900);
+}
+
+
 
     onMount(() => {
         document.querySelectorAll('.note .numbering').forEach(item => {
@@ -125,60 +131,61 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-    const sub = ndk.subscribe({ kinds: [1], created_at_gte: lastWeek }, { closeOnEose: false });
-    let matchedEvents = [];
-    let combinedEvents = {}; // Object to store combined event data
+        eventszFromSubscription = [];
+        const sub = ndk.subscribe({ kinds: [1], created_at_gte: lastWeek }, { closeOnEose: false });
+        let matchedEvents = [];
+        let combinedEvents = {};
 
-    sub.on('event', (receivedEvent) => {
-        const content = receivedEvent.content;
-        const wordCount = content.split(/\s+/).length;
-        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
-        const pattern = excludedWords.join("|");
-        const regex = new RegExp(pattern, "i");
+        sub.on('event', (receivedEvent) => {
+            const content = receivedEvent.content;
+            const wordCount = content.split(/\s+/).length;
+            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
+            const pattern = excludedWords.join("|");
+            const regex = new RegExp(pattern, "i");
 
-        if (wordCount < 100 || regex.test(content)) {
-            return;
-        }
+            if (wordCount < 100 || regex.test(content)) {
+                return;
+            }
 
-        matchedEvents.push(receivedEvent);
+            matchedEvents.push(receivedEvent);
 
-        const hexpubkey = receivedEvent.pubkey;
+            const hexpubkey = receivedEvent.pubkey;
 
-        if (!combinedEvents[hexpubkey]) {
-            combinedEvents[hexpubkey] = { kind1: receivedEvent, kind0: null }; // Initialize with kind 1 event
+            if (!combinedEvents[hexpubkey]) {
+                combinedEvents[hexpubkey] = { kind1: receivedEvent, kind0: null }; // Initialize with kind 1 event
 
-            // Subscribe to kind 0 events for the same pubkey
-            const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
+                // Subscribe to kind 0 events for the same pubkey
+                const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
 
-            subz.on('event', (receivedKind0Event) => {
-                try {
-                    const parsedContent = JSON.parse(receivedKind0Event.content);
-                    combinedEvents[hexpubkey].kind0 = parsedContent; // Update with kind 0 event
-                } catch (error) {
-                    console.error("Error parsing content:", error);
-                }
-            });
+                subz.on('event', (receivedKind0Event) => {
+                    try {
+                        const parsedContent = JSON.parse(receivedKind0Event.content);
+                        combinedEvents[hexpubkey].kind0 = parsedContent; // Update with kind 0 event
+                    } catch (error) {
+                        console.error("Error parsing content:", error);
+                    }
+                });
 
-            subz.on('eose', () => {
-                console.log('End of stream for subz');
-                // Once end of stream is reached, distribute the combined event data
-                distributeCombinedEvents(combinedEvents[hexpubkey]);
-            });
+                subz.on('eose', () => {
+                    console.log('End of stream for subz');
+                    // Once end of stream is reached, distribute the combined event data
+                    distributeCombinedEvents(combinedEvents[hexpubkey]);
+                });
 
-            subz.on('notice', (notice) => {
-                console.log('Notice for subz:', notice);
-            });
-        }
-    });
-
-    sub.on('eose', () => {
-        console.log('End of stream for sub');
-        // Distribute combined event data for all matched events
-        matchedEvents.forEach(event => {
-            distributeCombinedEvents(combinedEvents[event.pubkey]);
+                subz.on('notice', (notice) => {
+                    console.log('Notice for subz:', notice);
+                });
+            }
         });
-    });
-}
+
+        sub.on('eose', () => {
+            console.log('End of stream for sub');
+            // Distribute combined event data for all matched events
+            matchedEvents.forEach(event => {
+                distributeCombinedEvents(combinedEvents[event.pubkey]);
+            });
+        });
+    }
 
 const uniqueEventIds = new Set();
 
@@ -186,7 +193,8 @@ function distributeCombinedEvents(combinedEvent) {
     if (combinedEvent.kind1 && combinedEvent.kind0) {
         const eventId = combinedEvent.kind1.id;
         if (!uniqueEventIds.has(eventId)) {
-            uniqueEventIds.add(eventId); // Add event ID to the set to mark it as processed
+            uniqueEventIds.add(eventId);
+            eventszFromSubscription.push(combinedEvent);
 
             // Check if the kind 0 event npub is already present in filteredNpub
             const npubIndex = filteredNpub.indexOf(combinedEvent.kind0.npub);
