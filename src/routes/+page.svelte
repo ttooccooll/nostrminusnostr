@@ -6,7 +6,7 @@
     import { writable } from 'svelte/store';
 
     const ndk = new NDK({
-        explicitRelayUrls: ["wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom"],
+        explicitRelayUrls: ["wss://brb.io", "wss://nostr.thank.eu", "wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
     });
 
     let isLoading = true;
@@ -125,44 +125,35 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], limit: 1000, created_at_gte: lastWeek }, { closeOnEose: false });
-        let matchedEvents = [];
-        let latestKind0Events = {};
+    const sub = ndk.subscribe({ kinds: [1], created_at_gte: lastWeek }, { closeOnEose: false });
+    let matchedEvents = [];
+    let combinedEvents = {}; // Object to store combined event data
 
-        sub.on('event', (receivedEvent) => {
-            const content = receivedEvent.content;
-            const wordCount = content.split(/\s+/).length;
-            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
-            const pattern = excludedWords.join("|");
-            const regex = new RegExp(pattern, "i");
-        
+    sub.on('event', (receivedEvent) => {
+        const content = receivedEvent.content;
+        const wordCount = content.split(/\s+/).length;
+        const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
+        const pattern = excludedWords.join("|");
+        const regex = new RegExp(pattern, "i");
+
         if (wordCount < 100 || regex.test(content)) {
             return;
         }
 
         matchedEvents.push(receivedEvent);
-        eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
 
         const hexpubkey = receivedEvent.pubkey;
 
-        if (!latestKind0Events[hexpubkey]) {
+        if (!combinedEvents[hexpubkey]) {
+            combinedEvents[hexpubkey] = { kind1: receivedEvent, kind0: null }; // Initialize with kind 1 event
+
+            // Subscribe to kind 0 events for the same pubkey
             const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
 
             subz.on('event', (receivedKind0Event) => {
                 try {
                     const parsedContent = JSON.parse(receivedKind0Event.content);
-                    console.log("Parsed content:", parsedContent);
-                    if (!latestKind0Events[hexpubkey] || receivedKind0Event.created_at > latestKind0Events[hexpubkey].created_at) {
-                        latestKind0Events[hexpubkey] = parsedContent;
-                    }
-                    eventszFromSubscription.push(parsedContent);
-                    eventszStore.update(events => [...events, parsedContent]);
-                    filteredName.push(parsedContent.name);
-                    filteredPicture.push(parsedContent.picture);
-                    filteredAbout.push(parsedContent.about);
-                    filteredWeb.push(parsedContent.website);
-                    filteredNpub.push(parsedContent.npub);
-                    latestKind0Events[hexpubkey] = parsedContent;
+                    combinedEvents[hexpubkey].kind0 = parsedContent; // Update with kind 0 event
                 } catch (error) {
                     console.error("Error parsing content:", error);
                 }
@@ -170,6 +161,8 @@
 
             subz.on('eose', () => {
                 console.log('End of stream for subz');
+                // Once end of stream is reached, distribute the combined event data
+                distributeCombinedEvents(combinedEvents[hexpubkey]);
             });
 
             subz.on('notice', (notice) => {
@@ -180,14 +173,61 @@
 
     sub.on('eose', () => {
         console.log('End of stream for sub');
-        const matchedHexpubkeys = matchedEvents.map(event => event.pubkey);
-        matchedHexpubkeys.forEach(hexpubkey => {
-            if (latestKind0Events[hexpubkey]) {
-                eventszFromSubscription.push(latestKind0Events[hexpubkey]);
-                eventszStore.update(events => [...events, latestKind0Events[hexpubkey]]);
-            }
+        // Distribute combined event data for all matched events
+        matchedEvents.forEach(event => {
+            distributeCombinedEvents(combinedEvents[event.pubkey]);
         });
     });
+}
+
+const uniqueEventIds = new Set();
+
+function distributeCombinedEvents(combinedEvent) {
+    if (combinedEvent.kind1 && combinedEvent.kind0) {
+        const eventId = combinedEvent.kind1.id;
+        if (!uniqueEventIds.has(eventId)) {
+            uniqueEventIds.add(eventId); // Add event ID to the set to mark it as processed
+
+            // Check if the kind 0 event npub is already present in filteredNpub
+            const npubIndex = filteredNpub.indexOf(combinedEvent.kind0.npub);
+
+            if (npubIndex === -1) {
+                // If npub is not present, add combined event data to arrays
+                eventszFromSubscription.push(combinedEvent);
+                eventszStore.update(events => [...events, combinedEvent]);
+
+                filteredName.push(combinedEvent.kind0.name);
+                filteredPicture.push(combinedEvent.kind0.picture);
+                filteredAbout.push(truncateAbout(combinedEvent.kind0.about));
+                filteredWeb.push(combinedEvent.kind0.website);
+                filteredNpub.push(combinedEvent.kind0.npub);
+            } else {
+                // If npub is already present, update the corresponding entry with the new data
+                eventszFromSubscription.splice(npubIndex, 1, combinedEvent);
+                eventszStore.update(events => {
+                    const updatedEvents = [...events];
+                    updatedEvents.splice(npubIndex, 1, combinedEvent);
+                    return updatedEvents;
+                });
+
+                filteredName.splice(npubIndex, 1, combinedEvent.kind0.name);
+                filteredPicture.splice(npubIndex, 1, combinedEvent.kind0.picture);
+                filteredAbout.splice(npubIndex, 1, truncateAbout(combinedEvent.kind0.about));
+                filteredWeb.splice(npubIndex, 1, combinedEvent.kind0.website);
+                filteredNpub.splice(npubIndex, 1, combinedEvent.kind0.npub);
+            }
+        }
+    }
+}
+
+
+function truncateAbout(about) {
+    const words = about.split(' ');
+    if (words.length > 100) {
+        return words.slice(0, 100).join(' ') + '...';
+    } else {
+        return about;
+    }
 }
 
 eventszStore.subscribe(value => {
@@ -225,9 +265,7 @@ eventszStore.subscribe(value => {
 
 </script>
 
-
 <div class="content">
-    
     <div class="left">
         {#if isLoading}
             <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
@@ -235,47 +273,59 @@ eventszStore.subscribe(value => {
             {#each eventsFromSubscription as event}
                 <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                     <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                    <p class="text">{@html parseContent(event.content)}</p>
-                    <p class="date">{convertTimestamp(event.created_at)}</p>
-                    <p class="peep">{nip19.npubEncode(event.pubkey)}</p>
                 </div>
             {/each}
         {/if}
     </div>
-
     <div class="right">
         <button on:click={login}>Login</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
-        {:else}
-            {#each eventszFromSubscription as event}
-                    <h2>{event.name}</h2>
-                    <p>
-                        <img src={event.picture} class="click-me" alt="NOPICTURE" />
-                    </p>
-                    <p class="about">{@html parseContent(event.about)}</p>
-                    <a class="peep" href="{event.website}" target="blank">{event.name}'s Website</a>
-                    <p class="about">{event.npub}</p>
-            {/each}
+            {:else}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <div class="right">
+                        <h2>{user.profile?.name}</h2>
+                        <p>
+                            <img src={user.profile?.image} class="click-me" alt="NOPICTURE" />
+                        </p>
+                        <p>{user.profile?.about}</p>
+                        <p>{user.profile?.lud16}</p>
+                    </div>
+                {/await}
+            {/if}
         {/if}
     </div>
-
 </div>
 
+{#each eventszFromSubscription as combinedEvent}
+    <div class="content">
+        {#if combinedEvent.kind1 && combinedEvent.kind0}
+            <div class="left">
+                {#if isLoading}
+                    <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
+                {:else}
+                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
+                        <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p> <!-- Access kind 1 event data -->
+                        <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
+                    </div>
+                {/if}
+            </div>
 
-    {#if isLoading}
-        <p class="loading">Horses: hold 'em.</p>
-    {:else}
-        {#if isUserLoggedIn}
-            {#await user.fetchProfile() then events}
-                <div class="right">
-                    <h2>{user.profile?.name}</h2>
+            <div class="right">
+                {#if isLoading}
+                    <p class="loading">Horses: hold 'em.</p>
+                {:else}
+                    <h2>{combinedEvent.kind0.name}</h2> <!-- Access kind 0 event data -->
                     <p>
-                        <img src={user.profile?.image} class="click-me" alt="NOPICTURE" />
+                        <img src={combinedEvent.kind0.picture} class="click-me" alt="NOPICTURE" />
                     </p>
-                    <p>{user.profile?.about}</p>
-                    <p>{user.profile?.lud16}</p>
-                </div>
-            {/await}
+                    <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
+                    <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
+                    <p class="about">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                {/if}
+            </div>
         {/if}
-    {/if}
+    </div>
+{/each}
