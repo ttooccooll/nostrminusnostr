@@ -262,19 +262,20 @@ eventszStore.subscribe(value => {
 
 </div>
 
-<div class="right">
+
     {#if isLoading}
         <p class="loading">Horses: hold 'em.</p>
     {:else}
         {#if isUserLoggedIn}
             {#await user.fetchProfile() then events}
-                <h2>{user.profile?.name}</h2>
-                <p>
-                    <img src={user.profile?.image} class="click-me" alt="NOPICTURE" />
-                </p>
-                <p>{user.profile?.about}</p>
-                <p>{user.profile?.lud16}</p>
+                <div class="right">
+                    <h2>{user.profile?.name}</h2>
+                    <p>
+                        <img src={user.profile?.image} class="click-me" alt="NOPICTURE" />
+                    </p>
+                    <p>{user.profile?.about}</p>
+                    <p>{user.profile?.lud16}</p>
+                </div>
             {/await}
         {/if}
     {/if}
-</div>
