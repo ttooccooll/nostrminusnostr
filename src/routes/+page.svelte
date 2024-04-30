@@ -6,7 +6,7 @@
     import { writable } from 'svelte/store';
 
     const ndk = new NDK({
-        explicitRelayUrls: ["wss://brb.io", "wss://nostr.thank.eu", "wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
+        explicitRelayUrls: ["wss://nostr.thank.eu", "wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
     });
 
     let isLoading = true;
@@ -198,7 +198,7 @@ function distributeCombinedEvents(combinedEvent) {
 
                 filteredName.push(combinedEvent.kind0.name);
                 filteredPicture.push(combinedEvent.kind0.picture);
-                filteredAbout.push(truncateAbout(combinedEvent.kind0.about));
+                filteredAbout.push(combinedEvent.kind0.about);
                 filteredWeb.push(combinedEvent.kind0.website);
                 filteredNpub.push(combinedEvent.kind0.npub);
             } else {
@@ -212,21 +212,11 @@ function distributeCombinedEvents(combinedEvent) {
 
                 filteredName.splice(npubIndex, 1, combinedEvent.kind0.name);
                 filteredPicture.splice(npubIndex, 1, combinedEvent.kind0.picture);
-                filteredAbout.splice(npubIndex, 1, truncateAbout(combinedEvent.kind0.about));
+                filteredAbout.splice(npubIndex, 1, combinedEvent.kind0.about);
                 filteredWeb.splice(npubIndex, 1, combinedEvent.kind0.website);
                 filteredNpub.splice(npubIndex, 1, combinedEvent.kind0.npub);
             }
         }
-    }
-}
-
-
-function truncateAbout(about) {
-    const words = about.split(' ');
-    if (words.length > 100) {
-        return words.slice(0, 100).join(' ') + '...';
-    } else {
-        return about;
     }
 }
 
@@ -259,8 +249,12 @@ eventszStore.subscribe(value => {
     }
 
     function parseContent(content) {
+        if (content) {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         return content.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
+    } else {
+            return ''; // Or any default value you want to return when content is undefined or null
+        }
     }
 
 </script>
