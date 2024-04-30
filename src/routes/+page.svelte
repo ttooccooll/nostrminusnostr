@@ -3,6 +3,7 @@
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
+    import { writable } from 'svelte/store';
 
     const ndk = new NDK({
         explicitRelayUrls: ["wss://relay.primal.net", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom"],
@@ -19,12 +20,15 @@
     let filteredPicture = [];
     let filteredAbout = [];
     let filteredWeb = [];
+    let filteredNpub = [];
+    const eventszStore = writable([]);
 
+    eventszStore.subscribe(value => {
+});
 
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
-            // fetchEventFromId();
             setInterval(fetchEventFromSub(), 3000);
         });
     }
@@ -117,11 +121,13 @@
         });
     };
 
-    function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], limit: 1000 }, { closeOnEose: false });
-        const subz = ndk.subscribe({ kinds: [0], limit: 100 }, { closeOnEose: false });
+    const now = Math.floor(Date.now() / 1000);
+    const lastWeek = now - (7 * 24 * 60 * 60);
 
+    function fetchEventFromSub() {
+        const sub = ndk.subscribe({ kinds: [1], limit: 1000, created_at_gte: lastWeek }, { closeOnEose: false });
         let matchedEvents = [];
+        let latestKind0Events = {};
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
@@ -129,57 +135,65 @@
             const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
-            
-            if (wordCount < 100 || regex.test(content)) {
-                return;
-            }
+        
+        if (wordCount < 100 || regex.test(content)) {
+            return;
+        }
 
-            console.log(event)
-            // Add kind 1 event to matchedEvents array
-            matchedEvents.push(receivedEvent);
-            eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
-        });
+        matchedEvents.push(receivedEvent);
+        eventsFromSubscription = [...eventsFromSubscription, receivedEvent];
 
-            sub.on('eose', () => {
-                console.log('End of stream for sub');
-                // Fetch kind 0 events corresponding to the matched pubkeys
-                ndk.fetchEvents({ kinds: [0], pubkeys: matchedPubkeys }).then(fetchedEvents => {
-                    // Add filtered kind 0 events to eventszFromSubscription
-                    eventszFromSubscription.push(...fetchedEvents);
-                }).catch(error => {
-                    console.error('Error fetching kind 0 events:', error);
-                });
-            });
+        const hexpubkey = receivedEvent.pubkey;
 
-            // Handle end of stream event for subz
-            subz.on('eose', () => {
-                console.log('End of stream for subz');
-            });
+        if (!latestKind0Events[hexpubkey]) {
+            const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
 
-            // Handle notice event for subz
-            subz.on('notice', (notice) => {
-                console.log('Notice for subz:', notice);
-            });
-
-        // Handle kind 0 events
-        subz.on('event', (receivedEvent) => {
-            try {
-                const parsedContent = JSON.parse(receivedEvent.content);
-                console.log("Parsed content:", parsedContent);
-                if (parsedContent.name && parsedContent.about && parsedContent.picture && parsedContent.about !== "Just your average nostr enjoyer") {
-                    // Add kind 0 events to eventszFromSubscription
+            subz.on('event', (receivedKind0Event) => {
+                try {
+                    const parsedContent = JSON.parse(receivedKind0Event.content);
+                    console.log("Parsed content:", parsedContent);
+                    if (!latestKind0Events[hexpubkey] || receivedKind0Event.created_at > latestKind0Events[hexpubkey].created_at) {
+                        latestKind0Events[hexpubkey] = parsedContent;
+                    }
                     eventszFromSubscription.push(parsedContent);
+                    eventszStore.update(events => [...events, parsedContent]);
                     filteredName.push(parsedContent.name);
                     filteredPicture.push(parsedContent.picture);
                     filteredAbout.push(parsedContent.about);
                     filteredWeb.push(parsedContent.website);
+                    filteredNpub.push(parsedContent.npub);
+                    latestKind0Events[hexpubkey] = parsedContent;
+                } catch (error) {
+                    console.error("Error parsing content:", error);
                 }
-            } catch (error) {
-                console.error("Error parsing content:", error);
+            });
+
+            subz.on('eose', () => {
+                console.log('End of stream for subz');
+            });
+
+            subz.on('notice', (notice) => {
+                console.log('Notice for subz:', notice);
+            });
+        }
+    });
+
+    sub.on('eose', () => {
+        console.log('End of stream for sub');
+        const matchedHexpubkeys = matchedEvents.map(event => event.pubkey);
+        matchedHexpubkeys.forEach(hexpubkey => {
+            if (latestKind0Events[hexpubkey]) {
+                eventszFromSubscription.push(latestKind0Events[hexpubkey]);
+                eventszStore.update(events => [...events, latestKind0Events[hexpubkey]]);
             }
         });
-    }
+    });
+}
 
+eventszStore.subscribe(value => {
+    // Update eventszFromSubscription with the latest value
+    eventszFromSubscription = value;
+});
 
     function fetchEventFromId() {
         const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
@@ -223,7 +237,7 @@
                     <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                     <p class="text">{@html parseContent(event.content)}</p>
                     <p class="date">{convertTimestamp(event.created_at)}</p>
-                    <p class="peep">{event.pubkey}</p>
+                    <p class="peep">{nip19.npubEncode(event.pubkey)}</p>
                 </div>
             {/each}
         {/if}
@@ -234,30 +248,33 @@
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
         {:else}
-            {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
-                    <h2>{user.profile?.name}</h2>
-                    <p>
-                        <img src={user.profile?.image} class="click-me" alt="fdsa" />
-                    </p>
-                    <p>{user.profile?.about}</p>
-                    <p>{user.profile?.lud16}</p>
-                {/await}
-            {/if}
-        {/if}
-        
-        {#if isLoading}
-            <p class="loading">Horses: hold 'em.</p>
-        {:else}
             {#each eventszFromSubscription as event}
                     <h2>{event.name}</h2>
                     <p>
-                        <img src={event.picture} class="click-me" alt="fdsa" />
+                        <img src={event.picture} class="click-me" alt="NOPICTURE" />
                     </p>
                     <p class="about">{@html parseContent(event.about)}</p>
                     <a class="peep" href="{event.website}" target="blank">{event.name}'s Website</a>
+                    <p class="about">{event.npub}</p>
             {/each}
         {/if}
     </div>
 
+</div>
+
+<div class="right">
+    {#if isLoading}
+        <p class="loading">Horses: hold 'em.</p>
+    {:else}
+        {#if isUserLoggedIn}
+            {#await user.fetchProfile() then events}
+                <h2>{user.profile?.name}</h2>
+                <p>
+                    <img src={user.profile?.image} class="click-me" alt="NOPICTURE" />
+                </p>
+                <p>{user.profile?.about}</p>
+                <p>{user.profile?.lud16}</p>
+            {/await}
+        {/if}
+    {/if}
 </div>
