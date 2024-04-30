@@ -25,7 +25,7 @@
         ndk.connect().then(() => {
             console.log('Connected');
             // fetchEventFromId();
-            fetchEventFromSub();
+            setInterval(fetchEventFromSub(), 3000);
         });
     }
     
