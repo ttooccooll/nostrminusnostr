@@ -33,9 +33,8 @@
         });
     }
     
-    // const user = ndk.getUser({npub: 'npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq'});
-    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000});
-    const profilesPromise = ndk.fetchEvents({kinds:[0], limit:100});
+    const eventsPromise = ndk.fetchEvents({kinds:[1]});
+    const profilesPromise = ndk.fetchEvents({kinds:[0]});
 
     eventsPromise.then(fetchedEvents => {
         events = fetchedEvents;
@@ -97,21 +96,19 @@
     }
 
     function handleDestroy(event) {
-    const note = event.currentTarget.parentNode;
-    note.classList.add('noterun');
-    const audio = new Audio('/boom.mp3');
-    audio.play();
-    audio.volume = 0.1;
-    setTimeout(() => {
-        const grandparentNode = note.parentNode.parentNode;
-        grandparentNode.classList.add('leftrun');
+        const note = event.currentTarget.parentNode;
+        note.classList.add('noterun');
+        const audio = new Audio('/boom.mp3');
+        audio.play();
+        audio.volume = 0.1;
         setTimeout(() => {
-            grandparentNode.remove();
-        }, 1000);
-    }, 900);
-}
-
-
+            const grandparentNode = note.parentNode.parentNode;
+            grandparentNode.classList.add('leftrun');
+            setTimeout(() => {
+                grandparentNode.remove();
+            }, 1000);
+        }, 900);
+    }
 
     onMount(() => {
         document.querySelectorAll('.note .numbering').forEach(item => {
@@ -119,20 +116,12 @@
         });
     });
 
-    function fetchProfile() {
-        const pr = '';
-        ndk.fetchProfile(pr).then((profile) => {
-            console.log(profile);
-            event = profile;
-        });
-    };
-
     const now = Math.floor(Date.now() / 1000);
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
         eventszFromSubscription = [];
-        const sub = ndk.subscribe({ kinds: [1], created_at_gte: lastWeek }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], limit: 10000, created_at_gte: lastWeek }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
@@ -143,7 +132,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (wordCount < 100 || regex.test(content)) {
+            if (wordCount < 60 || regex.test(content)) {
                 return;
             }
 
@@ -152,15 +141,14 @@
             const hexpubkey = receivedEvent.pubkey;
 
             if (!combinedEvents[hexpubkey]) {
-                combinedEvents[hexpubkey] = { kind1: receivedEvent, kind0: null }; // Initialize with kind 1 event
+                combinedEvents[hexpubkey] = { kind1: receivedEvent, kind0: null };
 
-                // Subscribe to kind 0 events for the same pubkey
                 const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
 
                 subz.on('event', (receivedKind0Event) => {
                     try {
                         const parsedContent = JSON.parse(receivedKind0Event.content);
-                        combinedEvents[hexpubkey].kind0 = parsedContent; // Update with kind 0 event
+                        combinedEvents[hexpubkey].kind0 = parsedContent;
                     } catch (error) {
                         console.error("Error parsing content:", error);
                     }
@@ -168,7 +156,6 @@
 
                 subz.on('eose', () => {
                     console.log('End of stream for subz');
-                    // Once end of stream is reached, distribute the combined event data
                     distributeCombinedEvents(combinedEvents[hexpubkey]);
                 });
 
@@ -180,7 +167,6 @@
 
         sub.on('eose', () => {
             console.log('End of stream for sub');
-            // Distribute combined event data for all matched events
             matchedEvents.forEach(event => {
                 distributeCombinedEvents(combinedEvents[event.pubkey]);
             });
