@@ -24,7 +24,7 @@
     const eventszStore = writable([]);
 
     eventszStore.subscribe(value => {
-});
+    });
 
     if (browser) {
         ndk.connect().then(() => {
@@ -33,8 +33,8 @@
         });
     }
     
-    const eventsPromise = ndk.fetchEvents({kinds:[1]});
-    const profilesPromise = ndk.fetchEvents({kinds:[0]});
+    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:1000 });
+    const profilesPromise = ndk.fetchEvents({kinds:[0], limit:1000 });
 
     eventsPromise.then(fetchedEvents => {
         events = fetchedEvents;
@@ -107,7 +107,7 @@
             setTimeout(() => {
                 grandparentNode.remove();
             }, 1000);
-        }, 900);
+        }, 500);
     }
 
     onMount(() => {
@@ -120,7 +120,7 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], limit: 1000, created_at_gte: lastWeek }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], limit: 100 }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
@@ -131,7 +131,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (wordCount < 60 || regex.test(content)) {
+            if (wordCount < 100 || regex.test(content)) {
                 return;
             }
 
@@ -172,60 +172,52 @@
         });
     }
 
-const uniqueEventIds = new Set();
+    const uniqueEventIds = new Set();
 
-function distributeCombinedEvents(combinedEvent) {
-    if (combinedEvent.kind1 && combinedEvent.kind0) {
-        const eventId = combinedEvent.kind1.id;
-        if (!uniqueEventIds.has(eventId)) {
-            uniqueEventIds.add(eventId);
-            eventszFromSubscription.push(combinedEvent);
+    function distributeCombinedEvents(combinedEvent) {
+        if (combinedEvent.kind1 && combinedEvent.kind0) {
+            const eventId = combinedEvent.kind1.id;
+            if (!uniqueEventIds.has(eventId)) {
+                uniqueEventIds.add(eventId);
+                eventszFromSubscription.push(combinedEvent);
 
-            // Check if the kind 0 event npub is already present in filteredNpub
-            const npubIndex = filteredNpub.indexOf(combinedEvent.kind0.npub);
+                // Check if the kind 0 event npub is already present in filteredNpub
+                const npubIndex = filteredNpub.indexOf(combinedEvent.kind0.npub);
 
-            if (npubIndex === -1) {
-                // If npub is not present, prepend combined event data to arrays
-                eventszStore.update(events => [combinedEvent, ...events]);
+                if (npubIndex === -1) {
+                    // If npub is not present, prepend combined event data to arrays
+                    eventszStore.update(events => [combinedEvent, ...events]);
 
-                filteredName.unshift(combinedEvent.kind0.name);
-                filteredPicture.unshift(combinedEvent.kind0.picture);
-                filteredAbout.unshift(combinedEvent.kind0.about);
-                filteredWeb.unshift(combinedEvent.kind0.website);
-                filteredNpub.unshift(combinedEvent.kind0.npub);
-            } else {
-                // If npub is already present, update the corresponding entry with the new data
-                eventszFromSubscription.splice(npubIndex, 1, combinedEvent);
-                eventszStore.update(events => {
-                    const updatedEvents = [...events];
-                    updatedEvents.splice(npubIndex, 1, combinedEvent);
-                    return updatedEvents;
-                });
+                    filteredName.unshift(combinedEvent.kind0.name);
+                    filteredPicture.unshift(combinedEvent.kind0.picture);
+                    filteredAbout.unshift(combinedEvent.kind0.about);
+                    filteredWeb.unshift(combinedEvent.kind0.website);
+                    filteredNpub.unshift(combinedEvent.kind0.npub);
+                } else {
+                    // If npub is already present, update the corresponding entry with the new data
+                    eventszFromSubscription.splice(npubIndex, 1, combinedEvent);
+                    eventszStore.update(events => {
+                        const updatedEvents = [...events];
+                        updatedEvents.splice(npubIndex, 1, combinedEvent);
+                        return updatedEvents;
+                    });
 
-                filteredName.splice(npubIndex, 1, combinedEvent.kind0.name);
-                filteredPicture.splice(npubIndex, 1, combinedEvent.kind0.picture);
-                filteredAbout.splice(npubIndex, 1, combinedEvent.kind0.about);
-                filteredWeb.splice(npubIndex, 1, combinedEvent.kind0.website);
-                filteredNpub.splice(npubIndex, 1, combinedEvent.kind0.npub);
+                    filteredName.splice(npubIndex, 1, combinedEvent.kind0.name);
+                    filteredPicture.splice(npubIndex, 1, combinedEvent.kind0.picture);
+                    filteredAbout.splice(npubIndex, 1, combinedEvent.kind0.about);
+                    filteredWeb.splice(npubIndex, 1, combinedEvent.kind0.website);
+                    filteredNpub.splice(npubIndex, 1, combinedEvent.kind0.npub);
+                }
             }
         }
     }
-}
 
 
-eventszStore.subscribe(value => {
-    // Update eventszFromSubscription with the latest value
-    eventszFromSubscription = value;
-});
+    eventszStore.subscribe(value => {
+        // Update eventszFromSubscription with the latest value
+        eventszFromSubscription = value;
+    });
 
-    function fetchEventFromId() {
-        const noteId = 'a7b6c336c0ae37094388531125ede9dc9d4141e4ac4a5f0d15ee78e41e07e040';
-        // const decoded = nip19.decode(noteId);
-        ndk.fetchEvent({ids:[noteId], kinds:[1]}).then((fetchedEvent) => {
-            event = fetchedEvent;
-            console.log(event);
-        });
-    };
 
     async function login() {
         const signer = new NDKNip07Signer;
@@ -246,7 +238,7 @@ eventszStore.subscribe(value => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         return content.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
     } else {
-            return ''; // Or any default value you want to return when content is undefined or null
+            return 'Nothing over here';
         }
     }
 
