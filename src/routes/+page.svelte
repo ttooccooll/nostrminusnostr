@@ -29,7 +29,7 @@
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
-            setInterval(fetchEventFromSub(), 3000);
+            setInterval(fetchEventFromSub, 3000);
         });
     }
     
@@ -120,8 +120,7 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        eventszFromSubscription = [];
-        const sub = ndk.subscribe({ kinds: [1], limit: 10000, created_at_gte: lastWeek }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], limit: 1000, created_at_gte: lastWeek }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
@@ -186,15 +185,14 @@ function distributeCombinedEvents(combinedEvent) {
             const npubIndex = filteredNpub.indexOf(combinedEvent.kind0.npub);
 
             if (npubIndex === -1) {
-                // If npub is not present, add combined event data to arrays
-                eventszFromSubscription.push(combinedEvent);
-                eventszStore.update(events => [...events, combinedEvent]);
+                // If npub is not present, prepend combined event data to arrays
+                eventszStore.update(events => [combinedEvent, ...events]);
 
-                filteredName.push(combinedEvent.kind0.name);
-                filteredPicture.push(combinedEvent.kind0.picture);
-                filteredAbout.push(combinedEvent.kind0.about);
-                filteredWeb.push(combinedEvent.kind0.website);
-                filteredNpub.push(combinedEvent.kind0.npub);
+                filteredName.unshift(combinedEvent.kind0.name);
+                filteredPicture.unshift(combinedEvent.kind0.picture);
+                filteredAbout.unshift(combinedEvent.kind0.about);
+                filteredWeb.unshift(combinedEvent.kind0.website);
+                filteredNpub.unshift(combinedEvent.kind0.npub);
             } else {
                 // If npub is already present, update the corresponding entry with the new data
                 eventszFromSubscription.splice(npubIndex, 1, combinedEvent);
@@ -213,6 +211,7 @@ function distributeCombinedEvents(combinedEvent) {
         }
     }
 }
+
 
 eventszStore.subscribe(value => {
     // Update eventszFromSubscription with the latest value
