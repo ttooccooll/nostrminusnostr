@@ -31,8 +31,8 @@
         });
     }
     
-    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:10000});
-    const profilesPromise = ndk.fetchEvents({kinds:[0], limit:10000});
+    const eventsPromise = ndk.fetchEvents({kinds:[1]});
+    const profilesPromise = ndk.fetchEvents({kinds:[0]});
 
     eventsPromise.then(fetchedEvents => {
         events = fetchedEvents;
@@ -118,7 +118,7 @@
     const lastTwoWeek = now - (14 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], limit:1000 }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastTwoWeek }, }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
@@ -129,7 +129,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (wordCount < 150 || regex.test(content)) {
+            if (wordCount < 100 || regex.test(content)) {
                 return;
             }
 
