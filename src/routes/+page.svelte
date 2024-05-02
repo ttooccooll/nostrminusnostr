@@ -120,7 +120,7 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], limit: 100 }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], limit: 1000 }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
@@ -177,44 +177,26 @@
     function distributeCombinedEvents(combinedEvent) {
         if (combinedEvent.kind1 && combinedEvent.kind0) {
             const eventId = combinedEvent.kind1.id;
+            
+            // Check if the event ID is already in the uniqueEventIds set
             if (!uniqueEventIds.has(eventId)) {
                 uniqueEventIds.add(eventId);
                 eventszFromSubscription.push(combinedEvent);
 
-                // Check if the kind 0 event npub is already present in filteredNpub
-                const npubIndex = filteredNpub.indexOf(combinedEvent.kind0.npub);
+                filteredName.push(combinedEvent.kind0.name);
+                filteredPicture.push(combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png');
+                filteredAbout.push(combinedEvent.kind0.about);
+                filteredWeb.push(combinedEvent.kind0.website);
+                filteredNpub.push(combinedEvent.kind0.npub);
 
-                if (npubIndex === -1) {
-                    // If npub is not present, prepend combined event data to arrays
-                    eventszStore.update(events => [combinedEvent, ...events]);
-
-                    filteredName.unshift(combinedEvent.kind0.name);
-                    filteredPicture.unshift(combinedEvent.kind0.picture);
-                    filteredAbout.unshift(combinedEvent.kind0.about);
-                    filteredWeb.unshift(combinedEvent.kind0.website);
-                    filteredNpub.unshift(combinedEvent.kind0.npub);
-                } else {
-                    // If npub is already present, update the corresponding entry with the new data
-                    eventszFromSubscription.splice(npubIndex, 1, combinedEvent);
-                    eventszStore.update(events => {
-                        const updatedEvents = [...events];
-                        updatedEvents.splice(npubIndex, 1, combinedEvent);
-                        return updatedEvents;
-                    });
-
-                    filteredName.splice(npubIndex, 1, combinedEvent.kind0.name);
-                    filteredPicture.splice(npubIndex, 1, combinedEvent.kind0.picture);
-                    filteredAbout.splice(npubIndex, 1, combinedEvent.kind0.about);
-                    filteredWeb.splice(npubIndex, 1, combinedEvent.kind0.website);
-                    filteredNpub.splice(npubIndex, 1, combinedEvent.kind0.npub);
-                }
+                // Update eventszStore with the new events array
+                eventszStore.set([...eventszFromSubscription]);
             }
         }
     }
 
 
     eventszStore.subscribe(value => {
-        // Update eventszFromSubscription with the latest value
         eventszFromSubscription = value;
     });
 
@@ -238,7 +220,7 @@
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         return content.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
     } else {
-            return 'Nothing over here';
+            return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client.';
         }
     }
 
@@ -286,7 +268,7 @@
                 {:else}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                        <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p> <!-- Access kind 1 event data -->
+                        <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
                     </div>
                 {/if}
@@ -296,9 +278,9 @@
                 {#if isLoading}
                     <p class="loading">Horses: hold 'em.</p>
                 {:else}
-                    <h2>{combinedEvent.kind0.name}</h2> <!-- Access kind 0 event data -->
+                    <h2>{combinedEvent.kind0.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture} class="click-me" alt="NOPICTURE" />
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" />
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
