@@ -231,9 +231,9 @@
                 {#await user.fetchProfile() then events}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture, but you can't zap anything yet. I'll get around to that, but don't get too excited. Zaps on nostrminusnostr gave a minimum amount. What!?!? Yeah, I'll explain that later.</p>
-                        <p class="text">In the meantime, you can enjoy this global feed. Yes, here you only ever get a global feed, which is not filtered by npubs you normally follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
-                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy a normal nostr experience. But she might enjoy reading stuff here.</p>
+                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture, but you can't zap anything yet. I'll get around to that, but don't get too excited. Zaps on nostrminusnostr will have a minimum amount. What!?!? Yeah, I'll explain that later.</p>
+                        <p class="text">In the meantime, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
+                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
                     </div>
                 {/await}
             {/if}
