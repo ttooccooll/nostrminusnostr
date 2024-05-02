@@ -13,8 +13,6 @@
     let events = []; 
     let user = null;
     let isUserLoggedIn = false;
-    let event = NDKEvent | null;
-    let eventsFromSubscription = [];
     let eventszFromSubscription = [];
     let filteredName = [];
     let filteredPicture = [];
@@ -131,7 +129,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (wordCount < 100 || regex.test(content)) {
+            if (wordCount < 150 || regex.test(content)) {
                 return;
             }
 
@@ -178,7 +176,6 @@
         if (combinedEvent.kind1 && combinedEvent.kind0) {
             const eventId = combinedEvent.kind1.id;
             
-            // Check if the event ID is already in the uniqueEventIds set
             if (!uniqueEventIds.has(eventId)) {
                 uniqueEventIds.add(eventId);
                 eventszFromSubscription.push(combinedEvent);
@@ -189,7 +186,6 @@
                 filteredWeb.push(combinedEvent.kind0.website);
                 filteredNpub.push(combinedEvent.kind0.npub);
 
-                // Update eventszStore with the new events array
                 eventszStore.set([...eventszFromSubscription]);
             }
         }
@@ -220,7 +216,7 @@
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         return content.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
     } else {
-            return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client.';
+            return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client. The person who is associated with this npub did not write this. Do you understand what I am saying? You are truly wasting your time.';
         }
     }
 
@@ -230,12 +226,17 @@
     <div class="left">
         {#if isLoading}
             <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
-        {:else}
-            {#each eventsFromSubscription as event}
-                <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
-                    <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                </div>
-            {/each}
+            {:else}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
+                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture, but you can't zap anything yet. I'll get around to that, but don't get too excited. Zaps on nostrminusnostr gave a minimum amount. What!?!? Yeah, I'll explain that later.</p>
+                        <p class="text">In the meantime, you can enjoy this global feed. Yes, here you only ever get a global feed, which is not filtered by npubs you normally follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
+                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy a normal nostr experience. But she might enjoy reading stuff here.</p>
+                    </div>
+                {/await}
+            {/if}
         {/if}
     </div>
     <div class="right">
