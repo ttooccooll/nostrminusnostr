@@ -31,8 +31,8 @@
         });
     }
     
-    const eventsPromise = ndk.fetchEvents({kinds:[1]});
-    const profilesPromise = ndk.fetchEvents({kinds:[0]});
+    const eventsPromise = ndk.fetchEvents({kinds:[1], limit:10000});
+    const profilesPromise = ndk.fetchEvents({kinds:[0], limit:10000});
 
     eventsPromise.then(fetchedEvents => {
         events = fetchedEvents;
@@ -118,7 +118,7 @@
     const lastTwoWeek = now - (14 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1]}, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], limit:1000 }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
