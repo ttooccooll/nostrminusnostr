@@ -110,6 +110,7 @@ p {
     height: 10em;
     width: 10em;
     margin: 5% 2% 0 0;
+    cursor: pointer;
     transform-style: preserve-3d;
     transition:
     .3s ease-in-out transform,
@@ -360,7 +361,7 @@ footer {
     font-family: "60s";
 }
 
-button {
+.login {
     z-index: 3;
     position: relative;
     background-color:hsl(1, 68%, 53%);
@@ -384,5 +385,48 @@ button {
           2px 7px 13px hsl(169, 68%, 53%), inset 1px 1px 2px hsl(122, 68%, 53%), inset -1px -1px 2px hsl(122, 68%, 53%);
         transform: scale(10);
         cursor: pointer;
+    }
+}
+
+.zap {
+    z-index: 3;
+    position: relative;
+    color:  hsl(169, 68%, 53%);
+    margin: 10px 0px 15px 0px;
+    border: none;
+    background: none;
+    border-radius: 15px;
+    align-self: center;
+    justify-self: center;
+    font-family: Papyrus;
+    font-size: .7em;
+    padding: 5px;
+    width: fit-content;
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: .3s ease-in-out transform;
+}
+
+.zap:hover {
+    animation: zapEffect 0.1s infinite alternate;
+    cursor: pointer;
+}
+
+@keyframes zapEffect {
+    0% {
+        transform: scale(1) rotate(0deg) skewY(0deg) skewX(0deg);
+    }
+    25% {
+        transform: scale(1.1) rotate(2deg) skewY(1deg) skewX(1deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(-2deg) skewY(-1deg) skewX(-1deg);
+    }
+    75% {
+        transform: scale(1.1) rotate(1deg) skewY(-5deg) skewX(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg) skewY(0deg) skewX(0deg);
     }
 }

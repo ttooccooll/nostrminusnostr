@@ -6,7 +6,7 @@
     import { writable } from 'svelte/store';
 
     const ndk = new NDK({
-        explicitRelayUrls: [ "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://nostr.land", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
+        explicitRelayUrls: [ "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
     });
 
     let isLoading = true;
@@ -19,6 +19,7 @@
     let filteredAbout = [];
     let filteredWeb = [];
     let filteredNpub = [];
+    let filteredNip19 = [];
     const eventszStore = writable([]);
 
     eventszStore.subscribe(value => {
@@ -114,27 +115,27 @@
         });
     });
 
-    const now = Math.floor(Date.now() / 1000);
-    const lastTwoWeek = now - (14 * 24 * 60 * 60);
+    const now = Math.floor(Date.now() / 3000);
+    const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastTwoWeek }, }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastWeek }, }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
             const wordCount = content.split(/\s+/).length;
-            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped"];
+            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped", "sats"];
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (wordCount < 100 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 100 || regex.test(content)) {
                 return;
             }
 
             matchedEvents.push(receivedEvent);
-
+            console.log(receivedEvent)
             const hexpubkey = receivedEvent.pubkey;
 
             if (!combinedEvents[hexpubkey]) {
@@ -185,6 +186,7 @@
                 filteredAbout.push(combinedEvent.kind0.about);
                 filteredWeb.push(combinedEvent.kind0.website);
                 filteredNpub.push(combinedEvent.kind0.npub);
+                filteredNip19.push(combinedEvent.kind0.nip19);
 
                 eventszStore.set([...eventszFromSubscription]);
             }
@@ -220,6 +222,25 @@
         }
     }
 
+    async function zapAction() {
+        if (!user) return;
+
+        const amount = 2000;
+        const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
+        
+        try {
+            const paymentRequest = await user.zap(amount, comment);
+            if (paymentRequest) {
+                console.log("Invoice Created. Payment request:", paymentRequest);
+                const alertMessage = prompt("Invoice Created. Payment request:", paymentRequest);
+            } else {
+                console.log("Zap request failed or returned null.");
+            }
+        } catch (error) {
+            console.error("Error zapping funds:", error);
+        }
+    }
+
 </script>
 
 <div class="content">
@@ -231,16 +252,16 @@
                 {#await user.fetchProfile() then events}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture, but you can't zap anything yet. I'll get around to that, but don't get too excited. Zaps on nostrminusnostr will have a minimum amount. What!?!? Yeah, I'll explain that later.</p>
-                        <p class="text">In the meantime, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
-                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
+                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
+                        <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
+                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.  If you don't like all my rules, no worries. Find another client. Best of luck finding these 90s pizza party colors somewhere else though!</p>
                     </div>
                 {/await}
             {/if}
         {/if}
     </div>
     <div class="right">
-        <button on:click={login}>Login</button>
+        <button class="login" on:click={login}>Login</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
             {:else}
@@ -271,6 +292,7 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
+                        <button class="zap" on:click={() => zapAction(combinedEvent)}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
@@ -281,7 +303,7 @@
                 {:else}
                     <h2>{combinedEvent.kind0.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" />
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent)} />
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
