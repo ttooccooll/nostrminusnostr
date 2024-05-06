@@ -293,7 +293,7 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:click={() => zapAction(combinedEvent.kind0.npub)}>THUNDER!</button>
+                        <button class="zap" on:click={() => zapAction(nip19.npubEncode(combinedEvent.kind1.pubkey))}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
@@ -304,11 +304,11 @@
                 {:else}
                     <h2>{combinedEvent.kind0.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind0.npub)} />
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(nip19.npubEncode(combinedEvent.kind1.pubkey))} />
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                    <p class="about">{nip19.npubEncode(combinedEvent.nip19)}</p>
+                    <p class="about">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
                 {/if}
             </div>
         {/if}
