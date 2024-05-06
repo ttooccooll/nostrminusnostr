@@ -1,5 +1,5 @@
 <script>
-    import NDK, { NDKEvent, NDKNip07Signer, NDKZap } from "@nostr-dev-kit/ndk";
+    import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
@@ -222,14 +222,14 @@
         }
     }
 
-    async function zapAction(npub) {
+    async function zapAction() {
         if (!user) return;
 
-        const amount = 2000;
+        const amount = 2000000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
 
         try {
-            const paymentRequest = await user.zap(amount, comment, npub);
+            const paymentRequest = await user.zap(amount, comment);
             if (paymentRequest) {
                 console.log("Invoice Created. Payment request:", paymentRequest);
                 const alertMessage = prompt("Invoice Created. Payment request:", paymentRequest);
@@ -304,11 +304,11 @@
                 {:else}
                     <h2>{combinedEvent.kind0.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent)} />
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind0.npub)} />
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                    <p class="about">{nip19.npubEncode(combinedEvent.kind0.npub)}</p>
+                    <p class="about">{combinedEvent.kind0.nip19}</p>
                 {/if}
             </div>
         {/if}
