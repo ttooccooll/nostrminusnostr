@@ -308,7 +308,6 @@
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                    <p class="about">{combinedEvent.kind0.nip19}</p>
                 {/if}
             </div>
         {/if}
