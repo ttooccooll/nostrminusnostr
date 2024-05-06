@@ -226,6 +226,7 @@
         if (!user) return;
 
         const amount = 2000000;
+        const authorName = combinedEvent.kind0.name;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
         
         try {
