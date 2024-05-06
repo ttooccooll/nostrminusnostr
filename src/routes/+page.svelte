@@ -1,5 +1,5 @@
 <script>
-    import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
+    import NDK, { NDKEvent, NDKNip07Signer, NDKZap } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
@@ -293,7 +293,7 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:click={() => zapAction(combinedEvent.kind0.nip19)}>THUNDER!</button>
+                        <button class="zap" on:click={() => zapAction(combinedEvent.kind0.npub)}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
