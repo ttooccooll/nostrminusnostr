@@ -222,15 +222,14 @@
         }
     }
 
-    async function zapAction() {
+    async function zapAction(nip19) {
         if (!user) return;
 
-        const amount = 2000000;
-        const authorName = combinedEvent.kind0.name;
+        const amount = 2000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
-        
+
         try {
-            const paymentRequest = await user.zap(amount, comment);
+            const paymentRequest = await user.zap(amount, comment, nip19);
             if (paymentRequest) {
                 console.log("Invoice Created. Payment request:", paymentRequest);
                 const alertMessage = prompt("Invoice Created. Payment request:", paymentRequest);
@@ -241,6 +240,7 @@
             console.error("Error zapping funds:", error);
         }
     }
+
 
 </script>
 
@@ -293,7 +293,7 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:click={() => zapAction(combinedEvent)}>THUNDER!</button>
+                        <button class="zap" on:click={() => zapAction(combinedEvent.kind0.nip19)}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
