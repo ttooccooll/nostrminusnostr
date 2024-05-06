@@ -222,14 +222,14 @@
         }
     }
 
-    async function zapAction(nip19) {
+    async function zapAction(npub) {
         if (!user) return;
 
         const amount = 2000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
 
         try {
-            const paymentRequest = await user.zap(amount, comment, nip19);
+            const paymentRequest = await user.zap(amount, comment, npub);
             if (paymentRequest) {
                 console.log("Invoice Created. Payment request:", paymentRequest);
                 const alertMessage = prompt("Invoice Created. Payment request:", paymentRequest);
@@ -308,7 +308,7 @@
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                    <p class="about">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    <p class="about">{nip19.npubEncode(combinedEvent.kind0.npub)}</p>
                 {/if}
             </div>
         {/if}
