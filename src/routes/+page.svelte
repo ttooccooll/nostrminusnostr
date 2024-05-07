@@ -126,7 +126,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 100 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 75 || regex.test(content)) {
                 return;
             }
 
@@ -213,7 +213,10 @@
     function parseContent(content) {
         if (content) {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return content.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
+        content = content.replace(urlRegex, url => `<a href="${url}" target="blank">${url}</a>`);
+        content = content.replace(/(https?:\/\/[^\s"'<>]+?\.(?:png|jpg|jpeg|gif|bmp))/gi, '<img src="$1" style="max-width: 100%; height: auto;" />');
+        content = content.replace(/(https?:\/\/.*?\.(?:mp4|webm))/gi, '<video controls><source src="$1" type="video/mp4"></video>');
+        return content;
     } else {
             return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client. The person who is associated with this npub did not write this. Do you understand what I am saying? You are truly wasting your time.';
         }
