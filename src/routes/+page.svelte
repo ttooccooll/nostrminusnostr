@@ -29,7 +29,7 @@
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
-            setInterval(fetchEventFromSub, 3000);
+            requestAnimationFrame(fetchEventFromSub);
         });
     }
     
@@ -59,31 +59,22 @@
 
     function handleHover(event) {
         hoveredNote = event.currentTarget;
-        try {
-            const audio = new Audio('/drag.mp3');
-            audio.volume = 0.05;
-            audio.play();
-        } catch (error) {
-        }
+        const audio = new Audio('/drag.mp3');
+        audio.volume = 0.03;
+        audio.play();
     }
 
     function handleHoverz(event) {
         hoveredNote = event.currentTarget;
-        try {
-            const audio = new Audio('/buzz.mp3');
-            audio.volume = 0.05;
-            audio.play();
-        } catch (error) {
-        }
+        const audio = new Audio('/buzz.mp3');
+        audio.volume = 0.03;
+        audio.play();
     }
 
     function handleMouseLeave() {
         hoveredNote = null;
-        try {
-            const audio = new Audio('/scrape.mp3');
-            audio.play();
-        } catch (error) {
-        }
+        const audio = new Audio('/scrape.mp3');
+        audio.play();
     }
 
     function handleFocus(event) {
@@ -95,7 +86,7 @@
         note.classList.add('noterun');
         const audio = new Audio('/boom.mp3');
         audio.play();
-        audio.volume = 0.1;
+        audio.volume = 0.06;
         setTimeout(() => {
             const grandparentNode = note.parentNode.parentNode;
             grandparentNode.classList.add('leftrun');
@@ -126,7 +117,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 75 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 50 || regex.test(content)) {
                 return;
             }
 
@@ -215,7 +206,7 @@
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         content = content.replace(urlRegex, url => `<a href="${url}" target="blank">${url}</a>`);
         content = content.replace(/(https?:\/\/[^\s"'<>]+?\.(?:png|jpg|jpeg|gif|bmp))/gi, '<img src="$1" style="max-width: 100%; height: auto;" />');
-        content = content.replace(/(https?:\/\/.*?\.(?:mp4|webm))/gi, '<video controls><source src="$1" type="video/mp4"></video>');
+        content = content.replace(/(https?:\/\/.*?\.(?:mp4|webm))/gi, '<video controls style="max-width: 100%; height: auto;"><source src="$1" type="video/mp4" ></video>');
         return content;
     } else {
             return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client. The person who is associated with this npub did not write this. Do you understand what I am saying? You are truly wasting your time.';
