@@ -21,6 +21,7 @@
     let filteredWeb = [];
     let filteredNpub = [];
     let filteredNip19 = [];
+    let filteredLud16 = [];
     const eventszStore = writable([]);
 
     eventszStore.subscribe(value => {
@@ -74,6 +75,20 @@
     function handleMouseLeave() {
         hoveredNote = null;
         const audio = new Audio('/scrape.mp3');
+        audio.play();
+    }
+
+    function handleHoverzzz(event) {
+        hoveredNote = event.currentTarget;
+        const audio = new Audio('/thunder.mp3');
+        audio.volume = 0.3;
+        audio.play();
+    }
+
+    function handleHoverb(event) {
+        hoveredNote = event.currentTarget;
+        const audio = new Audio('/balloon.mp3');
+        audio.volume = 0.2;
         audio.play();
     }
 
@@ -176,6 +191,7 @@
                 filteredWeb.push(combinedEvent.kind0.website);
                 filteredNpub.push(combinedEvent.kind0.npub);
                 filteredNip19.push(combinedEvent.kind0.nip19);
+                filteredLud16.push(combinedEvent.kind0.lud16);
 
                 eventszStore.set([...eventszFromSubscription]);
             }
@@ -191,6 +207,9 @@
     async function login() {
         const signer = new NDKNip07Signer;
         ndk.signer = signer;
+        const audio = new Audio('/ding.mp3');
+        audio.volume = 0.03;
+        audio.play();
         try {
             user = await signer.user();
             user.ndk = ndk;
@@ -203,19 +222,30 @@
 
     function parseContent(content) {
         if (content) {
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        content = content.replace(urlRegex, url => `<a href="${url}" target="blank">${url}</a>`);
-        content = content.replace(/(https?:\/\/[^\s"'<>]+?\.(?:png|jpg|jpeg|gif|bmp))/gi, '<img src="$1" style="max-width: 100%; height: auto;" />');
-        content = content.replace(/(https?:\/\/.*?\.(?:mp4|webm))/gi, '<video controls style="max-width: 100%; height: auto;"><source src="$1" type="video/mp4" ></video>');
-        return content;
-    } else {
+            const urlRegex = /(https?:\/\/[^\s'"<>()?]+)/g;
+            content = content.replace(urlRegex, url => {
+                if (/\.(png|jpg|jpeg|gif|bmp)$/i.test(url)) {
+                    return `<img src="${url}" class="notez" />`;
+                } else if (/\.(mp4|webm)$/i.test(url)) {
+                    return `<video controls class="notez"><source src="${url}" type="video/mp4"></video>`;
+                } else if (/\.(mp3|wav)$/i.test(url)) {
+                    return `<audio controls class="notez"><source src="${url}" type="audio/mpeg"></audio>`;
+                } else {
+                    return `<a href="${url}" target="_blank">${url}</a>`;
+                }
+            });
+            return content;
+        } else {
             return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client. The person who is associated with this npub did not write this. Do you understand what I am saying? You are truly wasting your time.';
         }
     }
 
-    async function zapAction(kind1Event) {
-        if (!user) return;
 
+    async function zapAction(kind1Event) {
+        const audio = new Audio('/ding.mp3');
+        audio.volume = 0.03;
+        audio.play();
+        if (!user && kind1Event) return;
         const amount = 2000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
 
@@ -227,6 +257,15 @@
         } catch (error) {
             console.error("Error zapping funds:", error);
         }
+    }
+
+    function copyTextToClipboard(text) {
+        var tempInput = document.createElement("input");
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
     }
 
 </script>
@@ -250,7 +289,7 @@
         {/if}
     </div>
     <div class="right">
-        <button class="login" on:click={login}>Login</button>
+        <button class="login" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
         {#if isLoading}
             <p class="loading">Horses: hold 'em.</p>
             {:else}
@@ -259,7 +298,7 @@
                     <div class="right">
                         <h2>{user.profile?.name}</h2>
                         <p>
-                            <img src={user.profile?.image} class="click-me" alt="NOPICTURE" />
+                            <img src={user.profile?.image} on:mouseover={handleHoverb} on:focus={handleFocus} class="click-me" alt="NOPICTURE" />
                         </p>
                         <p>{user.profile?.about}</p>
                         <p>{user.profile?.lud16}</p>
@@ -281,7 +320,7 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
+                        <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
@@ -292,11 +331,16 @@
                 {:else}
                     <h2>{combinedEvent.kind0.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind1)} />
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind1)} on:mouseover={handleHoverb} on:focus={handleFocus}/>
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
-                    <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                    <p class="about">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    {#if combinedEvent.kind0.website}
+                        <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
+                    {/if}
+                    <p class="about" >{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    {#if combinedEvent.kind0.lud16}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy">{combinedEvent.kind0.lud16}</p>
+                    {/if}
                 {/if}
             </div>
         {/if}

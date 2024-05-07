@@ -81,6 +81,7 @@ h1 {
     margin: 3% 2% 0 3%;
     font-family: "60s";
     height: fit-content;
+    padding: 0 0 20px 0;
 }
 
 h2 {
@@ -240,7 +241,8 @@ a {
 }
 
 a:hover {
-    color: hsl(116, 68%, 53%);
+    color: hsl(16, 68%, 63%);
+    text-decoration: underline;
 }
 
 a:visited {
@@ -302,6 +304,11 @@ a:visited {
     font-size: .75em;
     margin-top: 0;
     word-wrap: break-word;
+    cursor: pointer;
+}
+
+.peep:hover {
+    text-decoration: underline;
 }
 
 .date {
@@ -429,4 +436,15 @@ footer {
     100% {
         transform: scale(1) rotate(0deg) skewY(0deg) skewX(0deg);
     }
+}
+
+.notez {
+    display: inline-block;
+    position: relative;
+    z-index: 4;
+    border-radius: 20px;
+    max-width: 95%;
+    height: auto;
+    box-shadow: inset 0px -5px 12px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
+    font-family: Papyrus;
 }
