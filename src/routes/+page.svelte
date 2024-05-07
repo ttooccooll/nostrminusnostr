@@ -4,6 +4,7 @@
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
+    import { stringify } from 'flatted';
 
     const ndk = new NDK({
         explicitRelayUrls: [ "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
@@ -39,7 +40,6 @@
         events = fetchedEvents;
         isLoading = false;
     }).catch(error => {
-        console.error('Error fetching events:', error);
         isLoading = false;
     });
 
@@ -47,7 +47,6 @@
         events = fetchedEvents;
         isLoading = false;
     }).catch(error => {
-        console.error('Error fetching events:', error);
         isLoading = false;
     });
 
@@ -65,7 +64,6 @@
             audio.volume = 0.05;
             audio.play();
         } catch (error) {
-            console.error('Error playing audio:', error);
         }
     }
 
@@ -76,7 +74,6 @@
             audio.volume = 0.05;
             audio.play();
         } catch (error) {
-            console.error('Error playing audio:', error);
         }
     }
 
@@ -86,7 +83,6 @@
             const audio = new Audio('/scrape.mp3');
             audio.play();
         } catch (error) {
-            console.error('Error playing audio:', error);
         }
     }
 
@@ -135,11 +131,12 @@
             }
 
             matchedEvents.push(receivedEvent);
-            console.log(receivedEvent)
             const hexpubkey = receivedEvent.pubkey;
 
             if (!combinedEvents[hexpubkey]) {
-                combinedEvents[hexpubkey] = { kind1: receivedEvent, kind0: null };
+                const capturedEvent = receivedEvent;
+
+                combinedEvents[hexpubkey] = { kind1: capturedEvent, kind0: null };
 
                 const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
 
@@ -170,6 +167,7 @@
             });
         });
     }
+
 
     const uniqueEventIds = new Set();
 
@@ -207,7 +205,6 @@
             user.ndk = ndk;
             await user.fetchProfile();
             isUserLoggedIn = true;
-            console.log(user);
         } catch (error) {
             console.error("Error occurred during login:", error);
         }
@@ -222,25 +219,21 @@
         }
     }
 
-    async function zapAction() {
+    async function zapAction(kind1Event) {
         if (!user) return;
 
-        const amount = 2000000;
+        const amount = 2000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
 
         try {
-            const paymentRequest = await user.zap(amount, comment);
-            if (paymentRequest) {
-                console.log("Invoice Created. Payment request:", paymentRequest);
-                const alertMessage = prompt("Invoice Created. Payment request:", paymentRequest);
-            } else {
-                console.log("Zap request failed or returned null.");
-            }
+            const serializedEvent = stringify(kind1Event);
+
+            console.log(serializedEvent);
+            const paymentRequest = await kind1Event.zap(amount, comment, serializedEvent);
         } catch (error) {
             console.error("Error zapping funds:", error);
         }
     }
-
 
 </script>
 
@@ -255,7 +248,8 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
                         <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
-                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.  If you don't like all my rules, no worries. Find another client. Best of luck finding these 90s pizza party colors somewhere else though!</p>
+                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
+                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding these 90s pizza party colors somewhere else though!</p>
                     </div>
                 {/await}
             {/if}
@@ -293,7 +287,7 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:click={() => zapAction(nip19.npubEncode(combinedEvent.kind1.pubkey))}>THUNDER!</button>
+                        <button class="zap" on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
@@ -304,7 +298,7 @@
                 {:else}
                     <h2>{combinedEvent.kind0.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(nip19.npubEncode(combinedEvent.kind1.pubkey))} />
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind1)} />
                     </p>
                     <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
                     <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
