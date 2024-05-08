@@ -21,6 +21,7 @@
     let filteredWeb = [];
     let filteredNpub = [];
     let filteredNip19 = [];
+    let filteredLud06 = [];
     let filteredLud16 = [];
     const eventszStore = writable([]);
 
@@ -132,7 +133,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 50 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 75 || regex.test(content)) {
                 return;
             }
 
@@ -191,6 +192,7 @@
                 filteredWeb.push(combinedEvent.kind0.website);
                 filteredNpub.push(combinedEvent.kind0.npub);
                 filteredNip19.push(combinedEvent.kind0.nip19);
+                filteredLud16.push(combinedEvent.kind0.lud06);
                 filteredLud16.push(combinedEvent.kind0.lud16);
 
                 eventszStore.set([...eventszFromSubscription]);
@@ -240,22 +242,59 @@
         }
     }
 
+    function countImages(content) {
+        const imgRegex = /<img\b[^>]*>/g;
+        const matches = content.match(imgRegex);
+        return matches ? matches.length : 0;
+    }
+    const filteredEvents = eventszFromSubscription.filter(combinedEvent => {
+        const content = combinedEvent.kind1.content;
+        return countImages(content) <= 5;
+    });
 
     async function zapAction(kind1Event) {
         const audio = new Audio('/ding.mp3');
         audio.volume = 0.03;
         audio.play();
-        if (!user && kind1Event) return;
-        const amount = 2000;
+        if (!user || !kind1Event) return;
+        const event = kind1Event;
+        const amount = 1000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
 
         try {
-            const serializedEvent = stringify(kind1Event);
+            console.log(kind1Event);
+            const paymentRequest = await event.zap(amount, comment);
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '50%';
+            modal.style.left = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.padding = '20px';
+            modal.style.background = 'white';
+            modal.style.border = '1px solid #ccc';
+            modal.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+            modal.style.zIndex = '9999';
+            modal.innerHTML = `
+                <p>Call down the thunder!</p>
+                <textarea id="paymentRequest" rows="4" cols="50">${paymentRequest}</textarea>
+                <button onclick="copyPaymentRequest()">Copy</button>
+                <span class="close" onclick="closeModal()">&times;</span>
+            `;
+            document.body.appendChild(modal);
+            const closeButton = document.getElementsByClassName("close")[0];
+            closeButton.onclick = function() {
+                modal.style.display = "none";
+            };
 
-            console.log(serializedEvent);
-            const paymentRequest = await kind1Event.zap(amount, comment, serializedEvent);
+            window.copyPaymentRequest = function() {
+                const paymentRequestTextarea = document.getElementById('paymentRequest');
+                paymentRequestTextarea.select();
+                document.execCommand('copy');
+                alert('Payment request copied to clipboard!');
+            };
         } catch (error) {
             console.error("Error zapping funds:", error);
+            alert("An error occurred while zapping funds. Please try again later.");
         }
     }
 
@@ -295,14 +334,13 @@
             {:else}
             {#if isUserLoggedIn}
                 {#await user.fetchProfile() then events}
-                    <div class="right">
-                        <h2>{user.profile?.name}</h2>
-                        <p>
-                            <img src={user.profile?.image} on:mouseover={handleHoverb} on:focus={handleFocus} class="click-me" alt="NOPICTURE" />
-                        </p>
-                        <p>{user.profile?.about}</p>
-                        <p>{user.profile?.lud16}</p>
-                    </div>
+                    <h2>{user.profile?.name}</h2>
+                    <p>
+                        <img src={user.profile?.image} on:mouseover={handleHoverb} on:focus={handleFocus} class="click-me" alt="NOPICTURE" />
+                    </p>
+                    <p>{user.profile?.about}</p>
+                    <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
+                    <p class="peep" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</p>
                 {/await}
             {/if}
         {/if}
@@ -318,9 +356,11 @@
                 {:else}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                        <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
-                        <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
+                        {#if countImages(combinedEvent.kind1.content) <= 5}
+                            <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
+                            <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
+                            <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
+                        {/if}
                     </div>
                 {/if}
             </div>
@@ -338,6 +378,9 @@
                         <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
                     {/if}
                     <p class="about" >{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    {#if combinedEvent.kind0.lud06}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy">{combinedEvent.kind0.lud06}</p>
+                    {/if}
                     {#if combinedEvent.kind0.lud16}
                         <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy">{combinedEvent.kind0.lud16}</p>
                     {/if}
