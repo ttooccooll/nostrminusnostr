@@ -277,7 +277,7 @@
             modal.innerHTML = `
                 <p>Call down the thunder!</p>
                 <textarea id="paymentRequest" rows="4" cols="50">${paymentRequest}</textarea>
-                <button onclick="copyPaymentRequest()">Copy</button>
+                <button class="zap" onclick="copyPaymentRequest()">Copy</button>
                 <span class="close" onclick="closeModal()">&times;</span>
             `;
             document.body.appendChild(modal);

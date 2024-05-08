@@ -228,7 +228,7 @@ p {
         overflow: hidden;
     }
     .peep {
-        font-size: .4em;
+        font-size: .2em;
     }
     h1 {
         font-size: 2em;
@@ -447,4 +447,8 @@ footer {
     height: auto;
     box-shadow: inset 0px -5px 12px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
     font-family: Papyrus;
+}
+
+.close {
+    cursor: pointer;
 }
