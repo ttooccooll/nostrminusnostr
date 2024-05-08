@@ -258,7 +258,7 @@
         audio.play();
         if (!user || !kind1Event) return;
         const event = kind1Event;
-        const amount = 1000;
+        const amount = 2000000;
         const comment = prompt("You are about to cast a 2000 sat thunderbolt on this note. Speak your mind if you like!") || "";
 
         try {
