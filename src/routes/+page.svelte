@@ -280,7 +280,7 @@
                 <textarea id="paymentRequest" rows="6" cols="50">${paymentRequest}</textarea>
                 </br>
                 <button class="zap" onclick="copyPaymentRequest()">Copy</button>
-                <span class="zap" onclick="closeModal()">&times;</span>
+                <span class="close" onclick="closeModal()">&times;</span>
             `;
             document.body.appendChild(modal);
             const closeButton = document.getElementsByClassName("close")[0];
