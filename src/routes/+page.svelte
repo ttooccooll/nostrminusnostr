@@ -128,7 +128,7 @@
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
             const wordCount = content.split(/\s+/).length;
-            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped", "sats"];
+            const excludedWords = ["nostr", "relay", "client", "nip", "bitcoin", "btc", "kyc", "tech", "utxo", "mempool", "lightning", "ln", "zapped", "sats", "tpimg"];
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
@@ -241,16 +241,6 @@
         }
     }
 
-    function countImages(content) {
-        const imgRegex = /<img\b[^>]*>/g;
-        const matches = content.match(imgRegex);
-        return matches ? matches.length : 0;
-    }
-    const filteredEvents = eventszFromSubscription.filter(combinedEvent => {
-        const content = combinedEvent.kind1.content;
-        return countImages(content) <= 5;
-    });
-
     async function zapAction(kind1Event) {
         const audio = new Audio('/ding.mp3');
         audio.volume = 0.03;
@@ -357,11 +347,9 @@
                 {:else}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
-                        {#if countImages(combinedEvent.kind1.content) <= 5}
-                            <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
-                            <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                            <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
-                        {/if}
+                        <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
+                        <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
+                        <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
                     </div>
                 {/if}
             </div>
