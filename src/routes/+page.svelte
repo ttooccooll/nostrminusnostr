@@ -270,13 +270,14 @@
             modal.style.left = '50%';
             modal.style.transform = 'translate(-50%, -50%)';
             modal.style.padding = '20px';
-            modal.style.background = 'white';
+            modal.style.background = 'black';
+            modal.style.color = 'white';
             modal.style.border = '1px solid #ccc';
             modal.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
             modal.style.zIndex = '9999';
             modal.innerHTML = `
                 <p>Call down the thunder!</p>
-                <textarea id="paymentRequest" rows="4" cols="50">${paymentRequest}</textarea>
+                <textarea id="paymentRequest" rows="6" cols="50">${paymentRequest}</textarea>
                 <button class="zap" onclick="copyPaymentRequest()">Copy</button>
                 <span class="close" onclick="closeModal()">&times;</span>
             `;
