@@ -455,3 +455,22 @@ footer {
     font-size: 4em;
     color: hsl(699, 68%, 53%);
 }
+
+.peep:before {
+    content: attr(data-title);
+    display: none;
+}
+
+.peep:hover:before {
+    display: inline;
+}
+
+.about:before {
+    content: attr(data-title);
+    display: none;
+}
+
+.about:hover:before {
+    display: inline;
+    text-decoration: underline;
+}
