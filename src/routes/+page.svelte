@@ -269,6 +269,7 @@
                 <textarea id="paymentRequest" rows="6" cols="50">${paymentRequest}</textarea>
                 </br>
                 <button class="zap" onclick="copyPaymentRequest()">Copy</button>
+                </br>
                 <span class="close" onclick="closeModal()">&times;</span>
             `;
             document.body.appendChild(modal);
@@ -331,7 +332,7 @@
                     </p>
                     <p>{user.profile?.about}</p>
                     <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
-                    <p class="peep" on:click={() => copyTextToClipboard(user.profile?.lud16)} data-title="Click to copy">{user.profile?.lud16}</p>
+                    <p class="peep" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</p>
                 {/await}
             {/if}
         {/if}
@@ -366,12 +367,12 @@
                     {#if combinedEvent.kind0.website}
                         <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
                     {/if}
-                    <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} data-title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
                     {#if combinedEvent.kind0.lud06}
-                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} data-title="Click to copy ">{combinedEvent.kind0.lud06}</p>
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy ">{combinedEvent.kind0.lud06}</p>
                     {/if}
                     {#if combinedEvent.kind0.lud16}
-                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} data-title="Click to copy ">{combinedEvent.kind0.lud16}</p>
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy ">{combinedEvent.kind0.lud16}</p>
                     {/if}
                 {/if}
             </div>

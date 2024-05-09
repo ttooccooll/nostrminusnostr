@@ -456,21 +456,31 @@ footer {
     color: hsl(699, 68%, 53%);
 }
 
-.peep:before {
-    content: attr(data-title);
-    display: none;
+.tooltip {
+    position: fixed;
+    display: inline-block;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    pointer-events: none;
+    transition: opacity 0.1s;
+
 }
 
-.peep:hover:before {
+.peep:hover::after,
+.about:hover::after {
+    content: attr(title);
     display: inline;
-}
-
-.about:before {
-    content: attr(data-title);
-    display: none;
-}
-
-.about:hover:before {
-    display: inline;
-    text-decoration: underline;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translateX(-20%);
+    white-space: nowrap;
+    color: black;
+    font-size: 7em;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 0.6;
 }
