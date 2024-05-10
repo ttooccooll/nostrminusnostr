@@ -230,6 +230,9 @@ p {
     .peep {
         font-size: .2em;
     }
+    .date {
+        padding: 0 0 5px 5px;
+    }
     h1 {
         font-size: 2em;
     }
@@ -453,6 +456,7 @@ footer {
     cursor: pointer;
     font-family: Papyrus;
     font-size: 4em;
+    padding: 0;
     color: hsl(699, 68%, 53%);
 }
 
@@ -483,4 +487,17 @@ footer {
     border-radius: 5px;
     z-index: 9999;
     opacity: 0.6;
+}
+
+.qr-code {
+    color: hsl(612, 68%, 53%);
+    width: fit-content;
+    height: auto;
+    overflow: auto;
+}
+
+.paymentRequest {
+    color: hsl(169, 68%, 53%);
+    font-size: xx-small;
+    background: black;
 }

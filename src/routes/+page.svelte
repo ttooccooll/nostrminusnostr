@@ -4,6 +4,8 @@
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
+    import QRCode from 'qrcode-generator';
+
 
     const ndk = new NDK({
         explicitRelayUrls: [ "wss://relay.bitcoinpark.com", "wss://relay.f7z.io", "wss://relay.nostr.info", "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch"],
@@ -254,6 +256,8 @@
             console.log(kind1Event);
             const paymentRequest = await event.zap(amount, comment);
             const modal = document.createElement('div');
+            const qrCodeData = generateQRCode(paymentRequest);
+            const qrCodeImgTag = qrCodeData.createImgTag(4);
             modal.style.position = 'fixed';
             modal.style.top = '50%';
             modal.style.left = '50%';
@@ -266,14 +270,16 @@
             modal.style.zIndex = '9999';
             modal.innerHTML = `
                 <p>Call down the thunder!</p>
-                <textarea id="paymentRequest" rows="6" cols="50">${paymentRequest}</textarea>
+                <div class="qr-code">${qrCodeImgTag}</div>
+                </br>
+                <textarea class="paymentRequest" rows="5" cols="50">${paymentRequest}</textarea>
                 </br>
                 <button class="zap" onclick="copyPaymentRequest()">Copy</button>
                 </br>
                 <span class="close" onclick="closeModal()">&times;</span>
             `;
             document.body.appendChild(modal);
-            const closeButton = document.getElementsByClassName("close")[0];
+            const closeButton = modal.querySelector('.close');
             closeButton.onclick = function() {
                 modal.style.display = "none";
             };
@@ -286,7 +292,7 @@
             };
         } catch (error) {
             console.error("Error zapping funds:", error);
-            alert("An error occurred while zapping funds. Please try again later.");
+            alert("You can't zap this note. The author hasn't provided a payout address.");
         }
     }
 
@@ -297,6 +303,15 @@
         tempInput.select();
         document.execCommand("copy");
         document.body.removeChild(tempInput);
+    }
+
+    function generateQRCode(paymentRequest) {
+        const typeNumber = 0;
+        const errorCorrectionLevel = 'L';
+        const qr = QRCode(typeNumber, errorCorrectionLevel);
+        qr.addData(paymentRequest);
+        qr.make();
+        return qr;
     }
 
 </script>
@@ -350,7 +365,9 @@
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
+                        {#if combinedEvent.kind0.lud06 || combinedEvent.kind0.lud16}
+                            <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
+                        {/if}
                     </div>
                 {/if}
             </div>
