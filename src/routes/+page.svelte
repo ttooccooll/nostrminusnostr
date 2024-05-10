@@ -283,9 +283,8 @@
             closeButton.onclick = function() {
                 modal.style.display = "none";
             };
-
             window.copyPaymentRequest = function() {
-                const paymentRequestTextarea = document.getElementById('paymentRequest');
+                const paymentRequestTextarea = document.querySelector('.paymentRequest');
                 paymentRequestTextarea.select();
                 document.execCommand('copy');
                 alert('Payment request copied to clipboard!');
