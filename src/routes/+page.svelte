@@ -90,7 +90,7 @@
     function handleHoverb(event) {
         hoveredNote = event.currentTarget;
         const audio = new Audio('/balloon.mp3');
-        audio.volume = 0.2;
+        audio.volume = 0.05;
         audio.play();
     }
 
