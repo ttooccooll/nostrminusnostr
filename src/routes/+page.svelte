@@ -287,7 +287,6 @@
                 const paymentRequestTextarea = document.querySelector('.paymentRequest');
                 paymentRequestTextarea.select();
                 document.execCommand('copy');
-                alert('Payment request copied to clipboard!');
             };
         } catch (error) {
             console.error("Error zapping funds:", error);
