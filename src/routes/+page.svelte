@@ -193,7 +193,7 @@
                 filteredWeb.push(combinedEvent.kind0.website);
                 filteredNpub.push(combinedEvent.kind0.npub);
                 filteredNip19.push(combinedEvent.kind0.nip19);
-                filteredLud16.push(combinedEvent.kind0.lud06);
+                filteredLud06.push(combinedEvent.kind0.lud06);
                 filteredLud16.push(combinedEvent.kind0.lud16);
 
                 eventszStore.set([...eventszFromSubscription]);
@@ -363,6 +363,9 @@
                 {:else}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
+                        {#if combinedEvent.kind1.subject}
+                            <h2>{combinedEvent.kind1.subject}</h2>
+                        {/if}
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
                         {#if combinedEvent.kind0.lud06 || combinedEvent.kind0.lud16}

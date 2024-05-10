@@ -490,14 +490,13 @@ footer {
 }
 
 .qr-code {
-    color: hsl(612, 68%, 53%);
     width: fit-content;
     height: auto;
     overflow: auto;
 }
 
 .paymentRequest {
-    color: hsl(169, 68%, 53%);
+    color: hsl(612, 68%, 53%);
     font-size: xx-small;
     background: black;
 }
