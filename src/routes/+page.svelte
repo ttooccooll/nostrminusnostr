@@ -182,7 +182,7 @@
     function distributeCombinedEvents(combinedEvent) {
         if (combinedEvent.kind1 && combinedEvent.kind0) {
             const eventId = combinedEvent.kind1.id;
-            
+            console.log(combinedEvent)
             if (!uniqueEventIds.has(eventId)) {
                 uniqueEventIds.add(eventId);
                 eventszFromSubscription.push(combinedEvent);
