@@ -1,17 +1,4 @@
-@font-face {
-    font-family: "baseball";
-    src: url("public/jersey.otf");
-}
 
-@font-face {
-    font-family: "football";
-    src: url("public/football.ttf");
-}
-
-@font-face {
-    font-family: "times";
-    src: url("public/Chomsky.otf");
-}
 
 .loading1 {
     color: black;
@@ -22,7 +9,7 @@
     font-weight: bolder;
     font-size: xx-large;
     padding: 10px;
-    background-image: url("public/court.jpeg");
+    background-image: url("court.jpeg");
 }
 
 .login1 {
@@ -52,7 +39,7 @@
 body {
     background: green;
     font-family: "baseball";
-    background-image: url("public/base.jpeg");
+    background-image: url("base.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
     height: 100vh;
@@ -105,7 +92,7 @@ a:visited {
 .content {
     background: rgb(52, 210, 52);
     box-shadow: inset 0px -10px 25px rgb(18, 132, 18), 0px 5px 15px rgb(16, 73, 16);
-    background-image: url("public/fturf.jpeg");
+    background-image: url("fturf.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
 }

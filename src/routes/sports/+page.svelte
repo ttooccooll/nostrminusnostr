@@ -365,7 +365,7 @@
                 {:else}
                     <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
                         <div class="front">
-                            <img class="team_logo" src="public/bitsoccer.png" />
+                            <img class="team_logo" src="/bitsoccer.png" />
                             <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="player" alt="NOPICTURE"/>
                             <figcaption class="name">{combinedEvent.kind0.name}</figcaption>
                         </div>
