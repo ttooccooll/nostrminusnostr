@@ -1,0 +1,315 @@
+@font-face {
+    font-family: "baseball";
+    src: url("public/jersey.otf");
+}
+
+@font-face {
+    font-family: "football";
+    src: url("public/football.ttf");
+}
+
+@font-face {
+    font-family: "times";
+    src: url("public/Chomsky.otf");
+}
+
+.loading1 {
+    color: black;
+    background-color: rgb(170, 121, 57);
+    border-radius: 5px;
+    box-shadow: inset 0px -10px 25px rgb(85, 57, 21), 3px 5px 5px rgb(87, 56, 15);
+    font-family: "football";
+    font-weight: bolder;
+    font-size: xx-large;
+    padding: 10px;
+}
+
+.login1 {
+    color: #2f2f2f;
+    background-color: #f9f7f1;
+    border-radius: 5px;
+    border: none;
+    box-shadow: inset 0px -10px 25px #757373, 3px 5px 5px #2f2f2f;
+    font-family: "football";
+    font-weight: bolder;
+    font-size: xx-large;
+    padding: 10px;
+    opacity: .6;
+    cursor: pointer;
+    transition:
+        .7s ease-in-out box-shadow,
+        .7s ease-in-out transform;
+    &:hover {
+        box-shadow:
+        inset 0px -10px 25px #757373,
+          3px 6px 15px #2f2f2f,
+          2px 7px 13px #757373;
+          transform: scale(1.3);
+      }
+}
+
+body {
+    background: green;
+    font-family: "baseball";
+}
+
+h1 {
+    color: black;
+    font-family: "baseball";
+    opacity: .2;
+}
+
+p {
+    color: black;
+    font-family: 'Droid Serif';
+}
+
+footer {
+    font-size: large;
+    line-height: 5px;
+    font-family: 'Droid Serif';
+    background-color: #afaeaa;
+    padding: 10px;
+    width: fit-content;
+    border-radius: 5px;
+    box-shadow: inset 0px -10px 25px #757373, 3px 5px 5px #2f2f2f;
+}
+
+footer a {
+    font-family: 'times';
+}
+
+a {
+    font-family: 'Courier New', Courier, monospace;
+    color: #2f2f2f;
+}
+
+a:hover {
+    color: #1b1a1a;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #000000;
+}
+
+.content {
+    background: rgb(52, 210, 52);
+    box-shadow: inset 0px -10px 25px rgb(18, 132, 18), 0px 5px 15px rgb(16, 73, 16);
+}
+
+
+.right {
+  text-transform: uppercase; 
+  font-family: 'Roboto', sans-serif;
+  padding:30px;
+}
+
+.card {
+  margin-bottom:20px;
+  position: relative;
+  height: 300px;
+  width: 200px;
+  border: 15px lightblue solid;
+  transform-style: preserve-3d;
+  transition: transform 0.2s;
+  box-shadow: inset 0px -10px 25px #757373, 3px 5px 5px #2f2f2f;
+  
+  &:before, &:after {
+    content: '';
+  }
+  
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 8;
+    
+    border-top: 60px solid lightblue;
+    border-right: 60px solid transparent;
+  }
+  
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    border-top: 62px solid rgb(0, 0, 0);
+    border-right: 62px solid transparent;
+  }
+  
+  .team_logo {
+    position: absolute;
+    z-index: 15;
+    width:60px;
+    border-radius:50%;    
+    top: 0px;
+    left: 0px;
+  }
+  
+  .player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    height: 296px;
+    width: 196px;
+    border: 2px rgb(0, 0, 0) solid;
+  }
+  
+  figcaption {
+    line-height: 16px;
+    position: absolute;
+    bottom: -10px;
+    right: 0;
+    width: 66%;
+    height: 30px;
+    text-align: center;
+    font-size: 90%;
+    background: rgb(195, 67, 67);
+    border: 2px rgb(0, 0, 0) solid;
+    z-index: 10;
+    font-family: "baseball";
+
+    &:before, &:after {
+      content: '';
+    }
+    
+    &:before {
+      position: absolute;
+      bottom: 32px;
+      right: -2px;
+      z-index: 18;
+      border-bottom: 15px solid lightblue;
+      border-left: 15px solid transparent;
+    }
+
+    &:after {
+      position: absolute;
+      bottom: 32px;
+      right: -2px;
+      z-index: 15;
+      border-bottom: 17px solid rgb(0, 0, 0);
+      border-left: 17px solid transparent;
+    }
+  }
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.back {
+    transform: rotateY(180deg);
+    background-color: rgb(184, 88, 232);
+    font-weight: bolder;
+    padding: 2px;
+    overflow: scroll;
+    word-break: break-all;
+    border: 2px rgb(0, 0, 0) solid;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: #2c3e50;
+  background-image: none;
+}
+select::-ms-expand {
+  display: none;
+}
+.select {
+  position: relative;
+  display: flex;
+  width: 230px;
+  height: 3em;
+  line-height: 3;
+  background: #2c3e50;
+  overflow: hidden;
+  border-radius: .25em;
+  margin-bottom:20px
+}
+select {
+  flex: 1;
+  padding: 0 .5em;
+  color: #fff;
+  cursor: pointer;
+}
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #34495e;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+.select:hover::after {
+  color: lightblue;
+}
+
+
+.note {
+    color: #2f2f2f;
+    background-color: #f9f7f1;
+    border-radius: 5px;
+    box-shadow: inset 0px -10px 25px #757373, 3px 5px 5px #2f2f2f;
+    &:hover {
+        transform:
+          translate3d(8px, -26px, 10px)
+          rotateX(1deg)
+          rotateZ(0deg);
+        box-shadow:
+        inset 0px -10px 25px #757373,
+          3px 6px 15px #2f2f2f,
+          2px 7px 13px #757373;
+      }
+}
+
+.numbering {
+    font-family: 'times';
+    color: #2f2f2f;
+    background-color: #f9f7f1;
+    box-shadow: inset 0px -10px 25px hsl(255, 2%, 40%), 0px 5px 5px hsl(120, 2%, 23%);
+}
+
+.about {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0, 5px, 0, 5px;
+    overflow: scroll;
+}
+
+.date {
+    text-transform: uppercase;
+    border-bottom: 2px solid #2f2f2f;
+    border-top: 2px solid #2f2f2f;
+    padding: 12px 0 12px 0;
+    font-family: 'Droid Serif';
+    color: black
+}
+
+.zap {
+    font-family: 'baseball';
+    color: #2f2f2f;
+}
+
+.notez {
+    box-shadow: none;
+    border: #2f2f2f double 5px;
+}
