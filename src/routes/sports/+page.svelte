@@ -415,7 +415,7 @@
                 <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
                     {#await user.fetchProfile() then events}
                         <div class="front">
-                            <img class="team_logo" src="public/bitsoccer.png" />
+                            <img class="team_logo" src="/bitsoccer.png" />
                             <img src={user.profile?.image} class="player" alt="NOPICTURE" />
                             <figcaption class="name">{user.profile?.name}</figcaption>
                         </div>
