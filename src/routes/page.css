@@ -1,0 +1,502 @@
+@font-face {
+    font-family: "60s";
+    src: url("public/60s.ttf");
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    background: hsl(6, 68%, 53%);
+}
+
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 4em;
+    color: hsl(20, 68%, 53%);
+    overflow: hidden;
+    margin: -1% 0 0 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.content {
+    margin: 0 1% 1.5% 1%;
+    position: relative;
+    z-index: 2;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 50px;
+    background: hsl(267, 68%, 53%);
+    box-shadow: inset 0px -10px 25px hsl(77, 68%, 53%), 3px 15px 15px hsl(887, 68%, 53%);
+}
+
+.left {
+    position: relative;
+    z-index: 4;
+    margin: 3% 5% 0 3%;
+    max-width: 60%;
+    height: fit-content;
+}
+
+@keyframes leftrun {
+    0% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+    20% {
+        opacity: 0.9;
+        transform: scale(1.5);
+    }
+    40% {
+        opacity: 0.8;
+        transform: scale(1.7);
+    }
+    60% {
+        opacity: 0.7;
+        transform: scale(1.9);
+    }
+    80% {
+        opacity: 0.6;
+        transform: scale(2.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2.4);
+    }
+}
+  
+  .leftrun {
+    animation: leftrun .5s linear forwards;
+  }
+
+.right {
+    max-width: 30%;
+    min-width: 30%;
+    margin: 3% 2% 0 3%;
+    font-family: "60s";
+    height: fit-content;
+    padding: 0 0 20px 0;
+}
+
+h2 {
+    color:hsl(428, 68%, 53%);
+    transform-style: preserve-3d;
+    transform:
+    rotateX(-16deg)
+    rotateZ(-8deg);
+    word-wrap: break-word;
+}
+
+p {
+    color: hsl(116, 68%, 53%);
+}
+
+.click-me {
+    object-fit: cover;
+    overflow: hidden;
+    font-weight: bolder;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: hsl(418, 68%, 53%);
+    box-shadow: 3px 15px 15px hsl(7, 68%, 53%);
+    border-radius: 50%; 
+    height: 10em;
+    width: 10em;
+    margin: 5% 2% 0 0;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition:
+    .3s ease-in-out transform,
+    .2s ease-in-out box-shadow;
+    &:hover {
+        transform:
+            translate3d(8px, -26px, 10px)
+            rotateZ(4deg);
+        box-shadow:
+            3px 6px 15px hsl(39, 68%, 53%),
+            2px 7px 13px hsl(9, 68%, 53%);
+        }
+}
+
+.note {
+    position: relative;
+    z-index: 4;
+    margin: 1em 0 1em 0;
+    padding: 1em 1em 1em 1.5em;
+    background-color: hsl(279, 68%, 53%);
+    overflow-y: hidden;
+    border-radius: 50px;
+    width: fit-content;
+    max-width: 90%;
+    box-shadow: inset 0px -10px 25px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
+    font-family: Papyrus;
+    font-size: 1.4em;
+    transform:
+    rotateX(8deg)
+    rotateZ(4deg);
+    transform-style: preserve-3d;
+    transition:
+    .7s ease-in-out transform,
+    .6s ease-in-out box-shadow;
+  &:hover {
+    transform:
+      translate3d(8px, -26px, 10px)
+      rotateX(10deg)
+      rotateZ(2deg);
+    box-shadow:
+    inset 0px -10px 25px hsl(699, 68%, 53%),
+      3px 6px 15px hsl(139, 68%, 53%),
+      2px 7px 13px hsl(169, 68%, 53%);
+  }
+}
+
+@keyframes run {
+    0% {
+      transform: rotate(0deg) translateX(0);
+    }
+    100% {
+      transform: rotate(360deg) translateX(-200%);
+    }
+  }
+  
+  .noterun {
+    animation: run 1s linear forwards;
+  }
+
+  @media screen and (max-width: 700px) {
+    .note {
+        position: relative;
+        z-index: 4;
+        margin: 1em 0 1em 0;
+        padding: .1em .3em .3em .5em;
+        background-color: hsl(279, 68%, 53%);
+        overflow-y: hidden;
+        border-radius: 50px;
+        width: fit-content;
+        max-width: 80%;
+        box-shadow: inset 0px -10px 25px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
+        font-family: Papyrus;
+        font-size: 1.4em;
+        transform:
+        rotateX(2deg)
+        rotateZ(1deg);
+        transform-style: preserve-3d;
+        transition:
+        .7s ease-in-out transform,
+        .6s ease-in-out box-shadow;
+      &:hover {
+        transform:
+          translate3d(8px, -26px, 10px)
+          rotateX(1deg)
+          rotateZ(0deg);
+        box-shadow:
+        inset 0px -10px 25px hsl(699, 68%, 53%),
+          3px 6px 15px hsl(139, 68%, 53%),
+          2px 7px 13px hsl(169, 68%, 53%);
+      }
+    }
+    .about {
+        font-size: .5em;
+    }
+    .left {
+        position: relative;
+        z-index: 4;
+        margin: 3% 0 0 2%;
+        max-width: 75%;
+    }
+    
+    .right {
+        max-width: 20%;
+        min-width: 20%;
+        margin: 3% 10% 0 -2%;
+        font-family: "60s";
+    }
+    .click-me {
+        height: 6em;
+        width: 6em;
+    }
+    h2 {
+        font-size: .75em;
+        overflow: hidden;
+    }
+    .peep {
+        font-size: .2em;
+    }
+    .date {
+        padding: 0 0 5px 5px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+  }
+
+a {
+    color: hsl(400, 68%, 53%);
+    text-decoration: none;
+}
+
+a:hover {
+    color: hsl(16, 68%, 63%);
+    text-decoration: underline;
+}
+
+a:visited {
+    color: hsl(536, 68%, 53%);
+}
+
+.numbering {
+    font-family: "60s";
+    color:hsl(428, 68%, 53%);
+    position: relative;
+    z-index: 5;
+    background: hsl(202, 68%, 53%);
+    border-radius: 50px;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1em;
+    width: 2em;
+    height: 2em;
+    font-size: large;
+    box-shadow: inset 0px -10px 25px hsl(612, 68%, 53%), 0px 5px 5px hsl(122, 68%, 53%);
+    transform-style: preserve-3d;
+    transition:
+    .7s ease-in-out transform,
+    .6s ease-in-out box-shadow,
+    1.7s ease-in-out font-size;
+    &:hover {
+    font-size: 2em;
+    transform:
+      translate3d(8px, -26px, 10px)
+      rotateX(20deg)
+      rotateZ(4deg);
+    box-shadow:
+    inset 0px -10px 25px hsl(682, 68%, 53%),
+      3px 6px 15px hsl(139, 68%, 53%),
+      2px 7px 13px hsl(169, 68%, 53%);
+    cursor: crosshair;
+  }
+}
+
+.todo {
+    margin-left: .5em;
+}
+
+.zoom {
+    font-size: 3em;
+}
+
+.text {
+    white-space: pre-wrap;
+    font-size: .75em;
+    margin-bottom: 0;
+}
+
+.peep {
+    color: hsl(536, 68%, 53%);
+    font-size: .75em;
+    margin-top: 0;
+    word-wrap: break-word;
+    cursor: pointer;
+}
+
+.peep:hover {
+    text-decoration: underline;
+}
+
+.date {
+    color: hsl(46, 68%, 53%);
+    overflow-y: hidden;
+    text-wrap: wrap;
+    width: 100%;
+    margin-bottom: 0;
+    font-size: .75em;
+}
+
+.comments_counter {
+    color: hsl(699, 68%, 53%);
+}
+
+.about {
+    width: 90%;
+    word-wrap: break-word;
+}
+
+.loading {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    animation: loading 15s ease-in-out infinite;
+    font-size: xx-small;
+    position: fixed;
+    bottom: 0;
+    right: 30px;
+    margin-left: 30px;
+    text-shadow: -3px 6px 7px hsl(539, 68%, 53%), 2px -7px 4px hsl(1, 68%, 53%);
+    height: fit-content;
+}
+
+@keyframes loading {
+    0% {
+        font-size: xx-small;
+        bottom: 0;
+    }
+    80% {
+        font-size: 5em;
+        transform:
+        translate3d(-80px, -26px, 10px),
+        rotateX(-20deg),
+        rotateZ(4deg);
+        box-shadow: inset 2em 8em 1em black, 6em 3em 1em black;
+        background: hsl(267, 68%, 53%);
+        height: fit-content;
+        bottom: 25%;
+    }
+    100% {
+        font-size: xx-small;
+        bottom: 0;
+    }
+  }
+
+footer {
+    margin: 3em 3em 3em 3em;
+    font-family: "60s";
+}
+
+.login {
+    z-index: 3;
+    position: relative;
+    background-color:hsl(1, 68%, 53%);
+    color:hsl(48, 68%, 53%);
+    border: hsl(99, 68%, 53%) solid 1px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    box-shadow: inset 0px -10px 25px hsl(612, 68%, 53%), 2px 6px 5px hsl(122, 68%, 53%), -1px -1px 5px hsl(122, 68%, 53%), inset 1px 1px 2px hsl(122, 68%, 53%), inset -1px -1px 2px hsl(122, 68%, 53%);
+    font-family: Papyrus;
+    font-size: 1em;
+    padding: 2px;
+    width: 5em;
+    transform-style: preserve-3d;
+    transition:
+    .7s ease-in-out transform,
+    .7s ease-in-out box-shadow;
+    &:hover {
+        box-shadow:
+        inset 0px -10px 25px hsl(612, 68%, 53%),
+          3px 6px 15px hsl(139, 68%, 53%),
+          2px 7px 13px hsl(169, 68%, 53%), inset 1px 1px 2px hsl(122, 68%, 53%), inset -1px -1px 2px hsl(122, 68%, 53%);
+        transform: scale(10);
+        cursor: pointer;
+    }
+}
+
+.zap {
+    z-index: 3;
+    position: relative;
+    color:  hsl(169, 68%, 53%);
+    margin: 10px 0px 15px 0px;
+    border: none;
+    background: none;
+    border-radius: 15px;
+    align-self: center;
+    justify-self: center;
+    font-family: Papyrus;
+    font-size: .7em;
+    padding: 5px;
+    width: fit-content;
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: .3s ease-in-out transform;
+}
+
+.zap:hover {
+    animation: zapEffect 0.1s infinite alternate;
+    cursor: pointer;
+}
+
+@keyframes zapEffect {
+    0% {
+        transform: scale(1) rotate(0deg) skewY(0deg) skewX(0deg);
+    }
+    25% {
+        transform: scale(1.1) rotate(2deg) skewY(1deg) skewX(1deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(-2deg) skewY(-1deg) skewX(-1deg);
+    }
+    75% {
+        transform: scale(1.1) rotate(1deg) skewY(-5deg) skewX(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg) skewY(0deg) skewX(0deg);
+    }
+}
+
+.notez {
+    display: inline-block;
+    position: relative;
+    z-index: 4;
+    border-radius: 20px;
+    max-width: 95%;
+    height: auto;
+    box-shadow: inset 0px -5px 12px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
+    font-family: Papyrus;
+}
+
+.close {
+    cursor: pointer;
+    font-family: Papyrus;
+    font-size: 4em;
+    padding: 0;
+    color: hsl(699, 68%, 53%);
+}
+
+.tooltip {
+    position: fixed;
+    display: inline-block;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    pointer-events: none;
+    transition: opacity 0.1s;
+
+}
+
+.peep:hover::after,
+.about:hover::after {
+    content: attr(title);
+    display: inline;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translateX(-20%);
+    white-space: nowrap;
+    color: black;
+    font-size: 7em;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 0.6;
+}
+
+.qr-code {
+    width: fit-content;
+    height: auto;
+    overflow: auto;
+}
+
+.paymentRequest {
+    color: hsl(612, 68%, 53%);
+    font-size: xx-small;
+    background: black;
+}

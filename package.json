@@ -23,6 +23,7 @@
 		"node-fetch": "^2.7.0",
 		"nostr-tools": "^2.5.0",
 		"qrcode-generator": "^1.4.4",
+		"svelte-routing": "^2.13.0",
 		"svelte-sound": "^0.6.0"
 	}
 }

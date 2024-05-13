@@ -22,6 +22,7 @@
     font-weight: bolder;
     font-size: xx-large;
     padding: 10px;
+    background-image: url("public/court.jpeg");
 }
 
 .login1 {
@@ -51,6 +52,10 @@
 body {
     background: green;
     font-family: "baseball";
+    background-image: url("public/base.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
 }
 
 h1 {
@@ -68,9 +73,13 @@ footer {
     font-size: large;
     line-height: 5px;
     font-family: 'Droid Serif';
-    background-color: #afaeaa;
+    background-color: #f9f7f1;
     padding: 10px;
+    transform:
+        rotateX(2deg)
+        rotateZ(1deg);
     width: fit-content;
+    opacity: .8;
     border-radius: 5px;
     box-shadow: inset 0px -10px 25px #757373, 3px 5px 5px #2f2f2f;
 }
@@ -96,6 +105,9 @@ a:visited {
 .content {
     background: rgb(52, 210, 52);
     box-shadow: inset 0px -10px 25px rgb(18, 132, 18), 0px 5px 15px rgb(16, 73, 16);
+    background-image: url("public/fturf.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 

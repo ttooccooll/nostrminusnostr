@@ -63,8 +63,7 @@
 
     function handleHover(event) {
         hoveredNote = event.currentTarget;
-        const audio = new Audio('/.mp3');
-        audio.volume = 0.03;
+        const audio = new Audio('/pageturn.mp3');
         audio.play();
     }
 
@@ -77,7 +76,8 @@
 
     function handleMouseLeave() {
         hoveredNote = null;
-        const audio = new Audio('/.mp3');
+        const audio = new Audio('/pageturn.mp3');
+        audio.volume = 0.03;
         audio.play();
     }
 
@@ -102,7 +102,7 @@
     function handleDestroy(event) {
         const note = event.currentTarget.parentNode;
         note.classList.add('noterun');
-        const audio = new Audio('/boom.mp3');
+        const audio = new Audio('/wastebin.mp3');
         audio.play();
         audio.volume = 0.06;
         setTimeout(() => {
@@ -137,7 +137,10 @@
                 "skateboarding", "rowing", "archery", "olympics"
             ];
 
-            const includesRequiredWord = requiredWords.some(word => content.toLowerCase().includes(word.toLowerCase()));
+            const includesRequiredWord = requiredWords.some(word => {
+                const wordRegex = new RegExp('\\b' + word + '\\b', 'i');
+                return wordRegex.test(content);
+            });
 
             if (!includesRequiredWord || receivedEvent.tags.some(tag => tag[0] === "e")) {
                 return;
@@ -389,7 +392,7 @@
 <div class="content">
     <div class="left">
         {#if isLoading}
-            <p class="loading1">If you can read this, I'm still loading up some news, so you can go right ahead and hold your horses for just a minute.</p>
+            <p class="loading1">If you can read this, I'm still loading up some news. Please hold your horses for just one moment.</p>
             {:else}
             {#if isUserLoggedIn}
                 {#await user.fetchProfile() then events}
@@ -398,7 +401,7 @@
                         <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
                         <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
                         <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
-                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding these 90s pizza party colors somewhere else though!</p>
+                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
                     </div>
                 {/await}
             {/if}
@@ -408,8 +411,8 @@
         {#if isLoading}
             <p class="loading1">Horses: hold 'em.</p>
             {:else}
-            <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                {#if isUserLoggedIn}
+            {#if isUserLoggedIn}
+                <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
                     {#await user.fetchProfile() then events}
                         <div class="front">
                             <img class="team_logo" src="public/bitsoccer.png" />
@@ -422,8 +425,8 @@
                             <figcaption class="name" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</figcaption>
                         </div>
                     {/await}
-                {/if}
-            </figure>
+                </figure>
+            {/if}
         {/if}
             <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
     </div>
