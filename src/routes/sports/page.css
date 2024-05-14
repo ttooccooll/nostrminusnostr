@@ -332,7 +332,10 @@ select {
     max-width: 60%;
   }
   .card {
-    transform: scale(.7);
-    margin-left: -20%;
+    transform: scale(.65);
+    margin-left: -22%;
+  }
+  body {
+    overflow-x: hidden;
   }
 }
