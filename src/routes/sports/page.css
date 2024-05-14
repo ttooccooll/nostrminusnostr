@@ -316,11 +316,11 @@ select {
 @media screen and (max-width: 700px) {
   .loading1 {
     font-size: medium;
-    margin-left: 15%;
+    margin: 15%;
   }
   .login1 {
     font-size: medium;
-    margin-left: 15%;
+    margin: 15%;
   }
   .right {
     padding:0;
@@ -332,16 +332,16 @@ select {
     max-width: 60%;
   }
   .card {
-    transform: scale(.8);
+    transform: scale(.6);
     margin-left: -5%;
   }
   .date {
-    font-family: 'Droid Serif';
+    font-family: 'Droid Serif' !important;
   }
   .text {
-    font-family: 'Droid Serif';
+    font-family: 'Droid Serif' !important;
   }
   footer {
-    font-family: 'Droid Serif';
+    font-family: 'Droid Serif' !important;
   }
 }
