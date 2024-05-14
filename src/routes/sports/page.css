@@ -52,13 +52,13 @@ h1 {
 
 p {
     color: black;
-    font-family: 'Droid Serif';
+    font-family: 'Droid Serif', Courier, monospace;;
 }
 
 footer {
     font-size: large;
     line-height: 5px;
-    font-family: 'Droid Serif';
+    font-family: 'Droid Serif', Courier, monospace;;
     background-color: #f9f7f1;
     padding: 10px;
     transform:
@@ -295,12 +295,16 @@ select {
     overflow: scroll;
 }
 
+.text {
+  font-family: 'Droid Serif', Courier, monospace;;
+}
+
 .date {
     text-transform: uppercase;
     border-bottom: 2px solid #2f2f2f;
     border-top: 2px solid #2f2f2f;
     padding: 12px 0 12px 0;
-    font-family: 'Droid Serif';
+    font-family: 'Droid Serif', Courier, monospace;;
     color: black
 }
 
