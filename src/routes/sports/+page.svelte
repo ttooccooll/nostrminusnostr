@@ -64,6 +64,7 @@
     function handleHover(event) {
         hoveredNote = event.currentTarget;
         const audio = new Audio('/pageturn.mp3');
+        audio.volume = 0.04;
         audio.play();
     }
 
@@ -77,7 +78,7 @@
     function handleMouseLeave() {
         hoveredNote = null;
         const audio = new Audio('/pageturn.mp3');
-        audio.volume = 0.03;
+        audio.volume = 0.01;
         audio.play();
     }
 
@@ -90,7 +91,7 @@
 
     function handleHoverb(event) {
         hoveredNote = event.currentTarget;
-        const audio = new Audio('/.mp3');
+        const audio = new Audio('/balloon.mp3');
         audio.volume = 0.05;
         audio.play();
     }
@@ -121,10 +122,10 @@
     });
 
     const now = Math.floor(Date.now() / 3000);
-    const lastWeek = now - (7 * 24 * 60 * 60);
+    const lastTwoWeek = now - (14 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastWeek }, }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastTwoWeek }, }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
@@ -133,8 +134,9 @@
             const requiredWords = [
                 "baseball", "football", "soccer", "basketball", "ncaa",
                 "tennis", "hockey", "golf", "rugby", "cricket", "bowling",
-                "volleyball", "swimming", "cycling", "boxing",
-                "skateboarding", "rowing", "archery", "olympics"
+                "volleyball", "swimming", "cycling", "boxing", "nba", "nfl",
+                "skateboarding", "rowing", "archery", "olympics", "sports",
+                "mlb", "mls", "world cup"
             ];
 
             const includesRequiredWord = requiredWords.some(word => {
@@ -336,6 +338,11 @@
     onMount(() => {
     });
 
+    const nowInMillis = Math.floor(Date.now());
+    const currentDate = new Date(nowInMillis);
+    const formattedDate = currentDate.toLocaleString();
+    console.log("Current date and time:", formattedDate);
+
 </script>
 
 {#each eventszFromSubscription as combinedEvent}
@@ -431,3 +438,18 @@
             <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
     </div>
 </div>
+
+<footer>
+    <p class="text" style="font-size: 20px">
+        NOSTRMINUSNOSTR presents INTERNATIONAL SPORTS UNCENSORED
+    </p>
+    <p class="date">
+        {formattedDate}
+    </p>
+    <p class="text">
+        Welcome to nostrminusnostr, sports edition. Here you will find an international feed of sports related content, powered by the internet's most censorship-resistant protocol. There is no need to login if you just hope to catch up on the news. If you are familiar with the practice of zapping, and would like to login, you can use any web-extention signer.
+    </p>
+    <p class="date" style="margin-bottom: 10px">
+        It takes a moment to load up the notes. Please be patient and know that if you can still read the "hold your horses" statements above, the program is still loading.
+    </p>
+</footer>

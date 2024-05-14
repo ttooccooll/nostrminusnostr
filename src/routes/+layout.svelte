@@ -9,7 +9,7 @@
 
 <footer>
   <p>
-    Check me out away from nostr at <a href="https://stacker.news/jasonb" target="_blank">Stacker News</a>.
+    If you have feedback, or otherwise want to chat, check me out away from nostr at <a href="https://stacker.news/jasonb" target="_blank">Stacker News</a>.
   </p>
   <p>From here, you can discover where to discover me on nostr.</p>
   <p>We can hang out and talk Bitcoin or something like that.</p>
