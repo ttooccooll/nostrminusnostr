@@ -396,10 +396,3 @@
         {/if}
     </div>
 {/each}
-
-<nav>
-    <a href="/">Home</a>
-    <a href="/pizza">Pizza Party</a>
-    <a href="/sports">Sports</a>
-    <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
-</nav>

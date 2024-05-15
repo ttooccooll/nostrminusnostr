@@ -20,3 +20,11 @@
     It's like <a href="https://garfieldminusgarfield.net" target="_blank">garfieldminusgarfield</a>, but not really.
   </p>
 </footer>
+
+<nav>
+  <a href="/" on:click|preventDefault={() => setTimeout(() => window.location.href = '/', 1000)}>Home</a>
+  <a href="/pizza" on:click|preventDefault={() => setTimeout(() => window.location.href = '/pizza', 1000)}>Pizza Party</a>
+  <a href="/sports" on:click|preventDefault={() => setTimeout(() => window.location.href = '/sports', 1000)}>Sports</a>
+  <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
+</nav>
+
