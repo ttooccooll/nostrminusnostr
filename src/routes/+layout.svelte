@@ -20,3 +20,10 @@
     It's like <a href="https://garfieldminusgarfield.net" target="_blank">garfieldminusgarfield</a>, but not really.
   </p>
 </footer>
+
+<nav>
+  <a href="http://nostrminusnostr.vercel.app">Home</a>
+  <a href="http://nostrminusnostr.vercel.app/pizza">Pizza Party</a>
+  <a href="/http://nostrminusnostr.vercel.app/sports">Sports</a>
+  <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
+</nav>
