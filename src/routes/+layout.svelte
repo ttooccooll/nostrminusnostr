@@ -1,12 +1,24 @@
 <script>
     import '../app.css';
 
-function navigateWithDelay(url) {
-    setTimeout(() => {
-        goto(url);
-    }, 500);
-}
+    function navigateWithDelay(url) {
+        setTimeout(() => {
+            goto(url);
+        }, 500);
+    }
+
+    document.querySelectorAll('nav a').forEach(function(link) {
+        link.removeEventListener('mouseover', hoverEventHandler);
+        link.removeEventListener('mouseout', hoverEventHandler);
+    });
 </script>
+
+<style>
+  nav a:hover {
+    color: inherit !important;
+    background-color: transparent !important;
+  }
+</style>
 
 <div class="everybody">
     <h1>nostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminusnostrminus</h1>
