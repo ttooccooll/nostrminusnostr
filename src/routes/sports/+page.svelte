@@ -453,10 +453,3 @@
         It takes a moment to load up the notes. Please be patient and know that if you can still read the "hold your horses" statements above, the program is still loading.
     </p>
 </footer>
-
-<nav>
-    <a href="/">Home</a>
-    <a href="/pizza">Pizza Party</a>
-    <a href="/sports">Sports</a>
-    <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
-</nav>
