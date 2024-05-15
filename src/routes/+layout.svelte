@@ -1,5 +1,13 @@
 <script>
     import '../app.css';
+
+    import { goto } from '@sveltejs/kit';
+
+function navigateWithDelay(url) {
+    setTimeout(() => {
+        goto(url);
+    }, 500);
+}
 </script>
 
 <div class="everybody">
@@ -22,7 +30,8 @@
 </footer>
 
 <nav>
-  <a href="nostrminusnostr.vercel.app/pizza">Pizza Party</a>
-  <a href="nostrminusnostr.vercel.app/sports">Sports</a>
+  <a on:click={() => navigateWithDelay('/')} href="/">Home</a>
+  <a on:click={() => navigateWithDelay('/pizza')} href="/pizza">Pizza Party</a>
+  <a on:click={() => navigateWithDelay('/sports')} href="/sports">Sports</a>
   <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
 </nav>
