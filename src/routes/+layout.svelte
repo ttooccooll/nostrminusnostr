@@ -22,7 +22,7 @@
 </footer>
 
 <nav>
-  <a on:click={() => navigateWithDelay('/pizza')} href="https://www.nostrminusnostr.vercel.app/pizza">Pizza Party</a>
-  <a on:click={() => navigateWithDelay('/sports')} href="https://www.nostrminusnostr.vercel.app/sports">Sports</a>
+  <a href="https://www.nostrminusnostr.vercel.app/pizza">Pizza Party</a>
+  <a href="https://www.nostrminusnostr.vercel.app/sports">Sports</a>
   <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
 </nav>
