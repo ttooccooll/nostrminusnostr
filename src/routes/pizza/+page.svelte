@@ -5,6 +5,7 @@
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import QRCode from 'qrcode-generator';
+    import './pizza.css';
 
     const ndk = new NDK({
         explicitRelayUrls: [ "wss://relay.bitcoinpark.com", "wss://relay.f7z.io", "wss://relay.nostr.info", "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://deschooling.us", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.nebuu.la", "wss://nostr.sovrgn.co.za", "wss://nostr.javi.space", "wss://nostr.fbxl.net", "wss://nostr.zoz-serv.org" ],

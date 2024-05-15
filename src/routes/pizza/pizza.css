@@ -1,22 +1,3 @@
-@font-face {
-    font-family: "60s";
-    src: url("assets/60s.ttf");
-}
-
-@font-face {
-    font-family: "baseball";
-    src: url("assets/jersey.otf");
-}
-
-@font-face {
-    font-family: "football";
-    src: url("assets/football.ttf");
-}
-
-@font-face {
-    font-family: "times";
-    src: url("assets/Chomsky.otf");
-}
 
 ::-webkit-scrollbar {
     display: none;

@@ -5,7 +5,7 @@
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import QRCode from 'qrcode-generator';
-    import './page.css';
+    import './sports.css';
     import { gsap } from 'gsap';
 
     const ndk = new NDK({
@@ -372,8 +372,8 @@
                 {:else}
                     <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
                         <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" />
-                            <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="player" alt="NOPICTURE"/>
+                            <img class="team_logo" src="/bitsoccer.png" alt="" />
+                            <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="player" alt=""/>
                             <figcaption class="name">{combinedEvent.kind0.name}</figcaption>
                         </div>
                         <div class="back">
@@ -422,8 +422,8 @@
                 <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
                     {#await user.fetchProfile() then events}
                         <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" />
-                            <img src={user.profile?.image} class="player" alt="NOPICTURE" />
+                            <img class="team_logo" src="/bitsoccer.png" alt="" />
+                            <img src={user.profile?.image} class="player" alt="" />
                             <figcaption class="name">{user.profile?.name}</figcaption>
                         </div>
                         <div class="back">
