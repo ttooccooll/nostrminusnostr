@@ -122,10 +122,10 @@
     });
 
     const now = Math.floor(Date.now() / 3000);
-    const lastTwoWeek = now - (14 * 24 * 60 * 60);
+    const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastTwoWeek }, }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastWeek }, }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
