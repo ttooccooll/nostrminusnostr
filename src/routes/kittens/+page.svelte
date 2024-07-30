@@ -5,11 +5,10 @@
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import QRCode from 'qrcode-generator';
-    import './sports.css';
-    import { gsap } from 'gsap';
+    import './kittens.css';
 
     const ndk = new NDK({
-        explicitRelayUrls: [ "wss://relay.bitcoinpark.com", "wss://relay.f7z.io", "wss://relay.nostr.info", "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.javi.space" ],
+        explicitRelayUrls: [ "wss://astral.ninja", "wss://nos.lol", "wss://relay.snort.social", "wss://relay.nostr.band" ],
     });
 
     let isLoading = true;
@@ -37,7 +36,14 @@
         });
     }
     
-    const eventsPromise = ndk.fetchEvents({kinds:[1]});
+    const eventsPromise = ndk.fetchEvents({kinds:[1], npub:[
+        "npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m",
+        "npub1a2cww4kn9wqte4ry70vyfwqyqvpswksna27rtxd8vty6c74era8sdcw83a",
+        "npub18psflzah8gjq54t4zyjhezghzg9pvpjhm894f4yex9wpl79t3uxq03v73m",
+        "npub1qny3tkh0acurzla8x3zy4nhrjz5zd8l9sy9jys09umwng00manysew95gx",
+        "npub1lrnvvs6z78s9yjqxxr38uyqkmn34lsaxznnqgd877j4z2qej3j5s09qnw5",
+        "npub1cn4t4cd78nm900qc2hhqte5aa8c9njm6qkfzw95tszufwcwtcnsq7g3vle",
+        ]});
     const profilesPromise = ndk.fetchEvents({kinds:[0]});
 
     eventsPromise.then(fetchedEvents => {
@@ -63,8 +69,8 @@
 
     function handleHover(event) {
         hoveredNote = event.currentTarget;
-        const audio = new Audio('/pageturn.mp3');
-        audio.volume = 0.04;
+        const audio = new Audio('/drag.mp3');
+        audio.volume = 0.03;
         audio.play();
     }
 
@@ -77,8 +83,7 @@
 
     function handleMouseLeave() {
         hoveredNote = null;
-        const audio = new Audio('/pageturn.mp3');
-        audio.volume = 0.01;
+        const audio = new Audio('/scrape.mp3');
         audio.play();
     }
 
@@ -103,7 +108,7 @@
     function handleDestroy(event) {
         const note = event.currentTarget.parentNode;
         note.classList.add('noterun');
-        const audio = new Audio('/wastebin.mp3');
+        const audio = new Audio('/boom.mp3');
         audio.play();
         audio.volume = 0.06;
         setTimeout(() => {
@@ -122,31 +127,66 @@
     });
 
     const now = Math.floor(Date.now() / 3000);
-    const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastWeek }, }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1] },
+            { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
+        let retryCount = 0;
+        const maxRetries = 5;
+
+        const handleError = () => {
+            if (retryCount < maxRetries) {
+                const delay = Math.pow(2, retryCount) * 1000;
+                retryCount++;
+                setTimeout(() => fetchEventFromSub(), delay);
+            } else {
+                console.error('Max retries reached. Could not fetch events.');
+            }
+        };
 
         sub.on('event', (receivedEvent) => {
-            const content = receivedEvent.content;
-            const requiredWords = [
-                "baseball", "football", "soccer", "basketball", "ncaa",
-                "tennis", "hockey", "golf", "rugby", "cricket", "bowling",
-                "volleyball", "swimming", "cycling", "boxing", "nba", "nfl",
-                "skateboarding", "rowing", "archery", "olympics", "sports",
-                "mlb", "mls", "world cup", "espn"
-            ];
+            let content = receivedEvent.content;
+            const wordCount = content.split(/\s+/).length;
 
-            const includesRequiredWord = requiredWords.some(word => {
-                const wordRegex = new RegExp('\\b' + word + '\\b', 'i');
-                return wordRegex.test(content);
-            });
+            const replacements = {
+                nostr: "cute kitten",
+                relay: "kitten",
+                relays: "kittens",
+                client: "kitten",
+                clients: "kittens",
+                nip: "kitten",
+                nips: "kittens",
+                bitcoin: "puppy",
+                bitcoins: "puppies",
+                btc: "a cute little puppy",
+                kyc: "kitty litter",
+                tech: "puppies",
+                utxo: "puppy",
+                mempool: "puppy",
+                mempools: "puppies",
+                lightning: "puppies",
+                ln: "puppies",
+                zaps: "puppies",
+                sat: "puppy",
+                sats: "puppies"
+            };
 
-            if (!includesRequiredWord || receivedEvent.tags.some(tag => tag[0] === "e")) {
+            for (const [key, value] of Object.entries(replacements)) {
+                const regex = new RegExp(`\\b${key}\\b`, 'gi');
+                content = content.replace(regex, value);
+            }
+
+            const excludedWords = Object.keys(replacements);
+            const pattern = excludedWords.join("|");
+            const regex = new RegExp(pattern, "i");
+
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 50 || regex.test(content)) {
                 return;
             }
+
+            receivedEvent.content = content;
 
             matchedEvents.push(receivedEvent);
             const hexpubkey = receivedEvent.pubkey;
@@ -223,7 +263,7 @@
     async function login() {
         const signer = new NDKNip07Signer;
         ndk.signer = signer;
-        const audio = new Audio('/.mp3');
+        const audio = new Audio('/ding.mp3');
         audio.volume = 0.03;
         audio.play();
         try {
@@ -236,12 +276,51 @@
         }
     }
 
+    let dogFact = null;
+    let catImageUrl = null;
+    let dogImageUrl = null;
+
+    async function fetchFact() {
+        try {
+            const response = await fetch('https://dogapi.dog/api/v2/facts');
+            const data = await response.json();
+            dogFact = data.data[0].attributes.body; 
+        } catch (error) {
+            console.error('Error fetching the dog', error);
+        }
+    };
+
+    async function fetchCatImage() {
+        try {
+            const response = await fetch('https://api.thecatapi.com/v1/images/search');
+            const data = await response.json();
+            catImageUrl = data[0].url;
+        } catch (error) {
+            console.error('Error fetching cat image', error);
+        }
+    }
+
+    async function fetchDogImage() {
+        try {
+            const response = await fetch('https://dog.ceo/api/breeds/image/random');
+            const data = await response.json();
+            dogImageUrl = data.message;
+        } catch (error) {
+            console.error('Error fetching dog image', error);
+        }
+    }
+
+    fetchFact();
+    fetchCatImage();
+    fetchDogImage();
+
     function parseContent(content) {
         if (content) {
             const urlRegex = /(https?:\/\/[^\s'"<>()?]+)/g;
             content = content.replace(urlRegex, url => {
                 if (/\.(png|jpg|jpeg|gif|bmp)$/i.test(url)) {
-                    return `<img src="${url}" class="notez" />`;
+                    const randomImage = Math.random() < 0.5 ? catImageUrl : dogImageUrl;
+                    return `<img src="${randomImage}" class="notez" />`;
                 } else if (/\.(mp4|webm)$/i.test(url)) {
                     return `<video controls class="notez"><source src="${url}" type="video/mp4"></video>`;
                 } else if (/\.(mp3|wav)$/i.test(url)) {
@@ -252,9 +331,11 @@
             });
             return content;
         } else {
-            return 'I have not written a profile. Ergo, the more time you spend reading right here, the less time you are doing something productive. Go get a hobby and stop reading filler info on a random nostr client. The person who is associated with this npub did not write this. Do you understand what I am saying? You are truly wasting your time.';
+            return `
+                I have not written a profile. Ergo, the nostrminusnostr devs will now share with you a fun dog fact: ${dogFact || 'Loading...'}
+            `;
         }
-    }
+    };
 
     async function zapAction(kind1Event) {
         const audio = new Audio('/ding.mp3');
@@ -325,46 +406,62 @@
         return qr;
     }
 
-    function flipCard(event) {
-        const card = event.currentTarget;
-        gsap.to(card, { rotationY: 180, duration: 0.5, onComplete: () => {
-            card.classList.toggle('flipped');
-        } });
-    }
-
-    function flipBackCard(event) {
-        const card = event.currentTarget;
-        gsap.to(card, { rotationY: 0, duration: 0.5, onComplete: () => {
-            card.classList.toggle('flipped');
-        } });
-    }
-
-    onMount(() => {
-    });
-
-    const nowInMillis = Math.floor(Date.now());
-    const currentDate = new Date(nowInMillis);
-    const formattedDate = currentDate.toLocaleString();
-    console.log("Current date and time:", formattedDate);
-
 </script>
+
+<div class="content">
+    <div class="left">
+        {#if isLoading}
+            <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
+            {:else}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
+                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
+                        <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
+                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
+                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding these 90s pizza party colors somewhere else though!</p>
+                    </div>
+                {/await}
+            {/if}
+        {/if}
+    </div>
+    <div class="right">
+        <button class="login" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
+        {#if isLoading}
+            <p class="loading">Horses: hold 'em.</p>
+            {:else}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <h2>{user.profile?.name}</h2>
+                    <p>
+                        <img src={user.profile?.image} on:mouseover={handleHoverb} on:focus={handleFocus} class="click-me" alt="NOPICTURE" />
+                    </p>
+                    <p>{user.profile?.about}</p>
+                    <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
+                    <p class="peep" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</p>
+                {/await}
+            {/if}
+        {/if}
+    </div>
+</div>
 
 {#each eventszFromSubscription as combinedEvent}
     <div class="content">
         {#if combinedEvent.kind1 && combinedEvent.kind0}
             <div class="left">
                 {#if isLoading}
-                    <p class="loading1">If you can read this, I'm still loading up some news, so you can go right ahead and hold your horses for just a minute.</p>
+                    <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
                 {:else}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
-                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
+                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >yuck!</p>
                         {#if combinedEvent.kind1.subject}
                             <h2>{combinedEvent.kind1.subject}</h2>
                         {/if}
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
                         {#if combinedEvent.kind0.lud06 || combinedEvent.kind0.lud16}
-                            <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>Thunder</button>
+                            <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>THUNDER!</button>
                         {/if}
                     </div>
                 {/if}
@@ -372,88 +469,31 @@
 
             <div class="right">
                 {#if isLoading}
-                    <p class="loading1">Horses: hold 'em.</p>
+                    <p class="loading">Horses: hold 'em.</p>
                 {:else}
-                    <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                        <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" alt="" />
-                            <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="player" alt=""/>
-                            <figcaption class="name">{combinedEvent.kind0.name}</figcaption>
-                        </div>
-                        <div class="back">
-                            <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
-                            {#if combinedEvent.kind0.website}
-                                <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                            {/if}
-                                <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
-                            {#if combinedEvent.kind0.lud06}
-                                <figcaption class="name" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy ">{combinedEvent.kind0.lud06}</figcaption>
-                            {/if}
-                            {#if combinedEvent.kind0.lud16}
-                                <figcaption class="name" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy ">{combinedEvent.kind0.lud16}</figcaption>
-                            {/if}
-                        </div>
-                    </figure>
+                    <h2>{combinedEvent.kind0.name}</h2>
+                    <p>
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind1)} on:mouseover={handleHoverb} on:focus={handleFocus}/>
+                    </p>
+                    <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
+                    {#if combinedEvent.kind0.website}
+                        <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
+                    {/if}
+                    <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    {#if combinedEvent.kind0.lud06}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy ">{combinedEvent.kind0.lud06}</p>
+                    {/if}
+                    {#if combinedEvent.kind0.lud16}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy ">{combinedEvent.kind0.lud16}</p>
+                    {/if}
                 {/if}
             </div>
         {/if}
     </div>
 {/each}
 
-<div class="content">
-    <div class="left">
-        {#if isLoading}
-            <p class="loading1">If you can read this, I'm still loading up some news. Please hold your horses for just one moment.</p>
-            {:else}
-            {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
-                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
-                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
-                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
-                        <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
-                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
-                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
-                    </div>
-                {/await}
-            {/if}
-        {/if}
-    </div>
-    <div class="right">
-        {#if isLoading}
-            <p class="loading1">Horses: hold 'em.</p>
-            {:else}
-            {#if isUserLoggedIn}
-                <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                    {#await user.fetchProfile() then events}
-                        <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" alt="" />
-                            <img src={user.profile?.image} class="player" alt="" />
-                            <figcaption class="name">{user.profile?.name}</figcaption>
-                        </div>
-                        <div class="back">
-                            <p class="about">{user.profile?.about}</p>
-                            <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
-                            <figcaption class="name" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</figcaption>
-                        </div>
-                    {/await}
-                </figure>
-            {/if}
-        {/if}
-            <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
-    </div>
-</div>
-
 <footer>
-    <p class="text">
-        NOSTRMINUSNOSTR presents INTERNATIONAL SPORTS UNCENSORED
-    </p>
     <p class="date">
-        {formattedDate}
-    </p>
-    <p class="text">
-        Welcome to nostrminusnostr, sports edition. Here you will find an international feed of sports related content, powered by the internet's most censorship-resistant protocol. There is no need to login if you just hope to catch up on the news. If you are familiar with the practice of zapping, and would like to login, you can use any web-extention signer.
-    </p>
-    <p class="date">
-        It takes a moment to load up the notes. Please be patient and know that if you can still read the "hold your horses" statements above, the program is still loading.
+        You've arrived at the kittens and puppies area. Unlike other areas of nostrminusnostr, here you may read notes about nostr and bitcoin. However, the actual words are still censored. In fact, they're replaced with kittens and puppies! The same is true of all words related to the subjects and any images, regardless of their content. Enjoy...or don't. The choice is yours.
     </p>
 </footer>

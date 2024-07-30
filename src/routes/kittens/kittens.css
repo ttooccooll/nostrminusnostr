@@ -1,34 +1,10 @@
-@font-face {
-    font-family: "60s";
-    src: url("assets/60s.ttf");
-}
-
-@font-face {
-    font-family: "baseball";
-    src: url("assets/jersey.otf");
-}
-
-@font-face {
-    font-family: "football";
-    src: url("assets/football.ttf");
-}
-
-@font-face {
-    font-family: "times";
-    src: url("assets/Chomsky.otf");
-}
-
-@font-face {
-    font-family: "cute";
-    src: url("assets/cute.ttf");
-}
 
 ::-webkit-scrollbar {
     display: none;
 }
 
 body {
-    background: hsl(6, 68%, 53%);
+    background: black;
 }
 
 h1 {
@@ -37,14 +13,14 @@ h1 {
     justify-content: center;
     text-align: center;
     font-size: 4em;
-    color: hsl(20, 68%, 53%);
+    color: darkorange;
     overflow: hidden;
-    margin: -1% 0 0 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0 0 0 0;
+    font-family: "cute";
 }
 
 .content {
-    margin: 0 1% 1.5% 1%;
+    margin: .8% 1% 2% 1%;
     position: relative;
     z-index: 2;
     height: fit-content;
@@ -52,8 +28,7 @@ h1 {
     flex-direction: row;
     justify-content: space-between;
     border-radius: 50px;
-    background: hsl(267, 68%, 53%);
-    box-shadow: inset 0px -10px 25px hsl(77, 68%, 53%), 3px 15px 15px hsl(887, 68%, 53%);
+    background: purple;
 }
 
 .left {
@@ -99,7 +74,7 @@ h1 {
     max-width: 30%;
     min-width: 30%;
     margin: 3% 2% 0 3%;
-    font-family: "60s";
+    font-family: "cute";
     height: fit-content;
     padding: 0 0 20px 0;
 }
@@ -156,9 +131,9 @@ p {
     border-radius: 50px;
     width: fit-content;
     max-width: 90%;
-    box-shadow: inset 0px -10px 25px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
-    font-family: Papyrus;
-    font-size: 1.4em;
+    box-shadow: inset 0px -10px 25px darkmagenta, 3px 5px 5px hsl(119, 68%, 53%);
+    font-family: "cute";
+    font-size: 1.8em;
     transform:
     rotateX(8deg)
     rotateZ(4deg);
@@ -203,7 +178,6 @@ p {
         width: fit-content;
         max-width: 80%;
         box-shadow: inset 0px -10px 25px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
-        font-family: Papyrus;
         font-size: 1.4em;
         transform:
         rotateX(2deg)
@@ -237,7 +211,7 @@ p {
         max-width: 20%;
         min-width: 20%;
         margin: 3% 10% 0 -2%;
-        font-family: "60s";
+        font-family: "cute";
     }
     .click-me {
         height: 6em;
@@ -274,7 +248,7 @@ a:visited {
 
 .numbering {
     font-family: "60s";
-    color:hsl(428, 68%, 53%);
+    color:lightseagreen;
     position: relative;
     z-index: 5;
     background: hsl(202, 68%, 53%);
@@ -353,15 +327,15 @@ a:visited {
 }
 
 .loading {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: "cute";
     animation: loading 15s ease-in-out infinite;
-    font-size: xx-small;
+    font-size: x-small;
     position: fixed;
     bottom: 0;
     right: 30px;
     margin-left: 30px;
-    text-shadow: -3px 6px 7px hsl(539, 68%, 53%), 2px -7px 4px hsl(1, 68%, 53%);
     height: fit-content;
+    text-shadow: none;
 }
 
 @keyframes loading {
@@ -376,7 +350,7 @@ a:visited {
         rotateX(-20deg),
         rotateZ(4deg);
         box-shadow: inset 2em 8em 1em black, 6em 3em 1em black;
-        background: hsl(267, 68%, 53%);
+        background: purple;
         height: fit-content;
         bottom: 25%;
     }
@@ -388,7 +362,7 @@ a:visited {
 
 footer {
     margin: 3em 3em 3em 3em;
-    font-family: "60s";
+    font-family: "cute";
 }
 
 .login {
@@ -400,7 +374,7 @@ footer {
     margin-bottom: 15px;
     border-radius: 15px;
     box-shadow: inset 0px -10px 25px hsl(612, 68%, 53%), 2px 6px 5px hsl(122, 68%, 53%), -1px -1px 5px hsl(122, 68%, 53%), inset 1px 1px 2px hsl(122, 68%, 53%), inset -1px -1px 2px hsl(122, 68%, 53%);
-    font-family: Papyrus;
+    font-family: "cute";
     font-size: 1em;
     padding: 2px;
     width: 5em;
@@ -469,7 +443,7 @@ footer {
     max-width: 95%;
     height: auto;
     box-shadow: inset 0px -5px 12px hsl(699, 68%, 53%), 3px 5px 5px hsl(119, 68%, 53%);
-    font-family: Papyrus;
+    font-family: "cute";
 }
 
 .close {

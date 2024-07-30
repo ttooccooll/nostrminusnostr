@@ -25,5 +25,6 @@
   <a href="http://nostrminusnostr.vercel.app">Home</a>
   <a href="http://nostrminusnostr.vercel.app/pizza">Pizza Party</a>
   <a href="http://nostrminusnostr.vercel.app/sports">Sports</a>
+  <a href="http://nostrminusnostr.vercel.app/kittens">Kittens</a>
   <a href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
 </nav>
