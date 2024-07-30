@@ -8,7 +8,7 @@
     import './kittens.css';
 
     const ndk = new NDK({
-        explicitRelayUrls: [ "wss://astral.ninja", "wss://nos.lol", "wss://relay.snort.social", "wss://relay.nostr.band" ],
+        explicitRelayUrls: [ "wss://nos.lol", "wss://relay.snort.social", "wss://relay.nostr.band" ],
     });
 
     let isLoading = true;
