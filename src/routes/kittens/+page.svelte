@@ -160,6 +160,8 @@
                 nips: "kittens",
                 bitcoin: "puppy",
                 bitcoins: "puppies",
+                bitcoiner: "puppy dog",
+                bitcoiners: "puppy dogs",
                 btc: "a cute little puppy",
                 kyc: "kitty litter",
                 tech: "puppies",
@@ -182,7 +184,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 50 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 5 || regex.test(content)) {
                 return;
             }
 
