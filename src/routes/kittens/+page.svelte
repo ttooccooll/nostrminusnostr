@@ -164,6 +164,7 @@
                 bitcoiners: "puppy dogs",
                 btc: "a cute little puppy",
                 kyc: "kitty litter",
+                cbdc: "doggy doo-doo",
                 tech: "puppies",
                 utxo: "puppy",
                 mempool: "puppy",
