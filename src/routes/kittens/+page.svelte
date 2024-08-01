@@ -185,7 +185,7 @@
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 5 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 4 || regex.test(content)) {
                 return;
             }
 
