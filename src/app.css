@@ -23,6 +23,11 @@
     src: url("assets/cute.ttf");
 }
 
+@font-face {
+    font-family: "trek";
+    src: url("assets/trek.ttf");
+}
+
 ::-webkit-scrollbar {
     display: none;
 }

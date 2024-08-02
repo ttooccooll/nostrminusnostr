@@ -5,11 +5,11 @@
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import QRCode from 'qrcode-generator';
-    import './sports.css';
+    import './star.css';
     import { gsap } from 'gsap';
 
     const ndk = new NDK({
-        explicitRelayUrls: [ "wss://relay.bitcoinpark.com", "wss://relay.f7z.io", "wss://relay.nostr.info", "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.javi.space" ],
+        explicitRelayUrls: [ "wss://relay.bitcoinpark.com", "wss://relay.f7z.io", "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.mom", "wss://nostr.8777.ch", "wss://nostr.yuv.al", "wss://nostr.javi.space" ],
     });
 
     let isLoading = true;
@@ -125,18 +125,17 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastWeek }, }, { closeOnEose: false });
+        const sub = ndk.subscribe({ kinds: [1] }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
             const requiredWords = [
-                "baseball", "football", "soccer", "basketball", "ncaa",
-                "tennis", "hockey", "golf", "rugby", "cricket", "bowling",
-                "volleyball", "swimming", "cycling", "boxing", "nba", "nfl",
-                "skateboarding", "rowing", "archery", "olympics", "sports",
-                "mlb", "mls", "world cup", "espn", "olympics", "olympic"
+                "star trek", "trekkie", "picard", "kirk", "deep space nine",
+                "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
+                "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
+                "prime directive"
             ];
 
             const includesRequiredWord = requiredWords.some(word => {
@@ -349,6 +348,49 @@
 
 </script>
 
+<div class="content">
+    <div class="left">
+        {#if isLoading}
+            <p class="loading1">If you can read this, I'm still loading up some news. Please hold your horses for just one moment.</p>
+            {:else}
+            {#if isUserLoggedIn}
+                {#await user.fetchProfile() then events}
+                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
+                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
+                        <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
+                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
+                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
+                    </div>
+                {/await}
+            {/if}
+        {/if}
+    </div>
+    <div class="right">
+        {#if isLoading}
+            <p class="loading12">Horses: hold 'em.</p>
+            {:else}
+            {#if isUserLoggedIn}
+                <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
+                    {#await user.fetchProfile() then events}
+                        <div class="front">
+                            <img class="team_logo" src="/bitsoccer.png" alt="" />
+                            <img src={user.profile?.image} class="player" alt="" />
+                            <figcaption class="name">{user.profile?.name}</figcaption>
+                        </div>
+                        <div class="back">
+                            <p class="about">{user.profile?.about}</p>
+                            <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
+                            <figcaption class="name" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</figcaption>
+                        </div>
+                    {/await}
+                </figure>
+            {/if}
+        {/if}
+            <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
+    </div>
+</div>
+
 {#each eventszFromSubscription as combinedEvent}
     <div class="content">
         {#if combinedEvent.kind1 && combinedEvent.kind0}
@@ -400,60 +442,19 @@
     </div>
 {/each}
 
-<div class="content">
-    <div class="left">
-        {#if isLoading}
-            <p class="loading1">If you can read this, I'm still loading up some news. Please hold your horses for just one moment.</p>
-            {:else}
-            {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
-                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
-                        <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
-                        <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
-                        <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
-                        <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
-                        <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
-                    </div>
-                {/await}
-            {/if}
-        {/if}
-    </div>
-    <div class="right">
-        {#if isLoading}
-            <p class="loading1">Horses: hold 'em.</p>
-            {:else}
-            {#if isUserLoggedIn}
-                <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                    {#await user.fetchProfile() then events}
-                        <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" alt="" />
-                            <img src={user.profile?.image} class="player" alt="" />
-                            <figcaption class="name">{user.profile?.name}</figcaption>
-                        </div>
-                        <div class="back">
-                            <p class="about">{user.profile?.about}</p>
-                            <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
-                            <figcaption class="name" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</figcaption>
-                        </div>
-                    {/await}
-                </figure>
-            {/if}
-        {/if}
-            <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
+<div class="prefooter">
+    <div class="inside-prefooter">
+        <p class="text">
+            NOSTRMINUSNOSTR presents Star Trek News UNCENSORED
+        </p>
+        <p class="date">
+            {formattedDate}
+        </p>
+        <p class="text">
+            Welcome to nostrminusnostr, trekkie edition. Here you will find an international feed of sports related content, powered by the internet's most censorship-resistant protocol. There is no need to login if you just hope to catch up on the news. If you are familiar with the practice of zapping, and would like to login, you can use any web-extention signer.
+        </p>
+        <p class="date">
+            It takes a moment to load up the notes. Please be patient and know that if you can still read the "hold your horses" statements above, the program is still loading.
+        </p>
     </div>
 </div>
-
-<footer>
-    <p class="text">
-        NOSTRMINUSNOSTR presents INTERNATIONAL SPORTS UNCENSORED
-    </p>
-    <p class="date">
-        {formattedDate}
-    </p>
-    <p class="text">
-        Welcome to nostrminusnostr, sports edition. Here you will find an international feed of sports related content, powered by the internet's most censorship-resistant protocol. There is no need to login if you just hope to catch up on the news. If you are familiar with the practice of zapping, and would like to login, you can use any web-extention signer.
-    </p>
-    <p class="date">
-        It takes a moment to load up the notes. Please be patient and know that if you can still read the "hold your horses" statements above, the program is still loading.
-    </p>
-</footer>
