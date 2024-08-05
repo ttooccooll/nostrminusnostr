@@ -136,6 +136,9 @@
                 "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
                 "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
                 "prime directive"
+                // "science", "chemistry", "physics", "biology", "zoology", "astronomy",
+                // "geology", "oceanography", "biochemistry", "microbiology", "botany",
+                // "nasa", "seti"
             ];
 
             const includesRequiredWord = requiredWords.some(word => {
@@ -355,12 +358,14 @@
             {:else}
             {#if isUserLoggedIn}
                 {#await user.fetchProfile() then events}
-                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                    <div class="notes" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                      <div class="notess">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
                         <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
                         <p class="text">While here, you can enjoy this list of random longer notes. Yes, here you only ever get a global feed, which is not filtered by npubs you follow. So what's in it for you? This global feed is only of larger notes, and NONE of them are about nostr or even Bitcoin.</p>
                         <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
                         <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
+                      </div>
                     </div>
                 {/await}
             {/if}
@@ -368,7 +373,7 @@
     </div>
     <div class="right">
         {#if isLoading}
-            <p class="loading12">Horses: hold 'em.</p>
+            <p class="loading12"></p>
             {:else}
             {#if isUserLoggedIn}
                 <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
@@ -392,13 +397,14 @@
 </div>
 
 {#each eventszFromSubscription as combinedEvent}
-    <div class="content">
+    <div class="contentz">
         {#if combinedEvent.kind1 && combinedEvent.kind0}
-            <div class="left">
+            <div class="leftz">
                 {#if isLoading}
                     <p class="loading1">If you can read this, I'm still loading up some news, so you can go right ahead and hold your horses for just a minute.</p>
                 {:else}
-                    <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                    <div class="notes" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
+                      <div class="notess">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
                         {#if combinedEvent.kind1.subject}
                             <h2>{combinedEvent.kind1.subject}</h2>
@@ -408,13 +414,14 @@
                         {#if combinedEvent.kind0.lud06 || combinedEvent.kind0.lud16}
                             <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(combinedEvent.kind1)}>Thunder</button>
                         {/if}
+                      </div>
                     </div>
                 {/if}
             </div>
 
-            <div class="right">
+            <div class="right" style="background:black, border:black">
                 {#if isLoading}
-                    <p class="loading1">Horses: hold 'em.</p>
+                    <p class="loading12"></p>
                 {:else}
                     <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
                         <div class="front">

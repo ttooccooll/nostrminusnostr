@@ -4,21 +4,27 @@
   align-items: center;
   justify-content: center;
   color: #3787FE;
-  font-size: x-large;
+  font-size: large;
   font-family: "trek";
   font-weight: lighter;
   position: relative;
   background: #000000;
   border: black;
   height: 100%;
-  width: 100%;
-  border-top: 25px solid transparent;
-  border-left: 55px solid transparent;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 0px;
-  border-bottom-left-radius: 0px;
+  width: fit-content;
   margin: 0% 0% 0% 0%;
   padding-bottom: 2vh;
+  animation: scrollLeft 15s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .loading12 {
@@ -27,20 +33,21 @@
   align-items: center;
   justify-content: center;
   color: #3787FE;
-  font-size: x-large;
+  font-size: large;
   font-family: "trek";
   font-weight: lighter;
   position: relative;
   background: #000000;
   border: black;
-  height: 100%;
-  width: 100%;
-  margin: 0% 0% 0% 0%;
+  width: fit-content;
+  margin: 0% 0% 10% 0%;
+  animation: scrollLeft 15s linear infinite;
+  white-space: nowrap;
 }
 
 .login1 {
     color: black;
-    background-color: #D45F10;
+    background: linear-gradient(to right, rgba(212, 95, 16, 0.7) 0%, rgba(212, 95, 16, 1) 50%, rgba(212, 95, 16, 0.7) 100%);
     border-radius: 5px;
     border: none;
     font-family: "trek";
@@ -48,16 +55,9 @@
     font-size: x-large;
     padding: 10px;
     cursor: crosshair;
-    transition:
-        .7s ease-in-out box-shadow,
-        .7s ease-in-out transform;
-    &:hover {
-        box-shadow:
-        inset 0px -10px 25px #757373,
-          3px 6px 15px #2f2f2f,
-          2px 7px 13px #757373;
-          transform: scale(1.3);
-      }
+        &:hover {
+          opacity: .6;
+        }
 }
 
 body {
@@ -84,12 +84,8 @@ p {
     background-color: black;
 }
 
-br {
-  color: aqua;
-}
-
 .prefooter {
-  border-left: 95px solid transparent;
+  border-left: 55px solid transparent;
   margin-left: 2%;
   margin-right: 8%;
   margin-top: 2px;
@@ -106,7 +102,7 @@ br {
 
 footer {
   border-bottom: 25px solid transparent;
-  border-left: 95px solid transparent;
+  border-left: 55px solid transparent;
   border-radius: 25px;
   border-top-left-radius: 0px;
   border-top-right-radius: 0%;
@@ -114,7 +110,7 @@ footer {
   padding: 0;
   left: 0;
   right: 0;
-  margin: 2px 2% 1% 2%;
+  margin: 1% 2% 1% 2%;
   position: relative;
   background: linear-gradient(to right, rgba(206, 151, 18, 0.7) 0%, rgba(206, 151, 18, 1) 50%, rgba(206, 151, 18, 0.7) 100%);
   flex-wrap: nowrap;
@@ -123,7 +119,6 @@ footer {
 
 footer a {
     font-family: "trek";
-    color: #D45F10;
 }
 
 a {
@@ -140,18 +135,43 @@ a:visited {
   color: #D45F10;
 }
 
+footer p {
+  border-left: 30px solid black;
+  border-right: 30px solid black;
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
+  font-size: small;
+  margin: 0;
+}
+
 .content {
   border-top: 3vh solid transparent;
   border-left: 55px solid transparent;
   border-top-left-radius: 25px;
   border-top-right-radius: 0px;
   border-bottom-left-radius: 0px;
-  margin: 0% 2% 0% 2%;
+  margin: 0% 2% 1% 2%;
   overflow: hidden;
   position: relative;
   height: fit-content;
   box-shadow: none;
   background: linear-gradient(to right, rgba(206, 151, 18, 0.7) 0%, rgba(206, 151, 18, 1) 50%, rgba(206, 151, 18, 0.7) 100%);
+}
+
+.contentz {
+  border-left: 55px solid transparent;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin: 0% 2% 1% 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+  height: fit-content;
+  box-shadow: none;
+  background: linear-gradient(to right, rgba(212, 95, 16, 0.7) 0%, rgba(212, 95, 16, 1) 50%, rgba(212, 95, 16, 0.7) 100%);
 }
 
 .left {
@@ -165,8 +185,9 @@ a:visited {
   font-weight: lighter;
   position: relative;
   background: #000000;
+  overflow: hidden;
   border: black;
-  height: 100%;
+  height: auto;
   width: 100%;
   border-top: 25px solid transparent;
   border-left: 55px solid transparent;
@@ -177,7 +198,7 @@ a:visited {
   padding-bottom: 2vh;
 }
 
-.right {
+.leftz {
   text-align: center;
   display: flex;
   align-items: center;
@@ -188,12 +209,39 @@ a:visited {
   font-weight: lighter;
   position: relative;
   background: #000000;
+  overflow: hidden;
   border: black;
-  height: 100%;
+  height: auto;
   width: 100%;
   border-top: 25px solid transparent;
   border-left: 55px solid transparent;
   margin: 0% 0% 0% 0%;
+  padding-bottom: 2vh;
+}
+
+.right {
+  max-width: 40%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3787FE;
+  font-size: x-large;
+  font-family: "trek";
+  font-weight: lighter;
+  position: relative;
+  background: black;
+  border: black;
+  height: auto;
+  max-height: 100%;
+  width: 100%;
+  border-top: 25px solid transparent;
+  border-left: 55px solid transparent;
+  border: solid transparent;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin: 0% 0% 0% 0%;
+  padding: 0;
 }
 
 .card {
@@ -354,22 +402,44 @@ select {
 }
 
 
-.note {
+.notes {
     color: #2f2f2f;
-    background-color: black;
+    transform: 0;
+    transform-style: none;
+    box-shadow: none;
+    background-color: #000000;
+    border: 10px solid black transparent;
+    border-radius: 80px;
+    border-left-width: 45px;
+    border-right-width: 45px;
+    padding: 5%;
+    background: linear-gradient(to right, rgba(206, 151, 18, 0.7) 0%, rgba(206, 151, 18, 1) 50%, rgba(206, 151, 18, 0.7) 100%);
     border-radius: 5px;
-    &:hover {
-        box-shadow:
-        inset 0px -10px 25px #757373,
-          3px 6px 15px #2f2f2f,
-          2px 7px 13px #757373;
-      }
+}
+
+.notess {
+  background: black;
+  border: 30px black solid;
+  border-radius: 80px;
 }
 
 .numbering {
     font-family: "trek";
-    color: #2f2f2f;
-    background-color: #f9f7f1;
+    color: black;
+    border-radius: 5px;
+    padding: 1%;
+    box-shadow: none;
+    width: fit-content;
+    height: fit-content;
+    cursor: crosshair;
+    transform-style: none;
+    transition: none;
+    background: linear-gradient(to right, rgba(9, 70, 238, 0.7) 0%, rgba(9, 70, 238, 1) 50%, rgba(9, 70, 238, 0.7) 100%);
+    &:hover {
+      opacity: .6;
+      transform: none;
+      box-shadow: none;
+    }
 }
 
 .about {
@@ -388,11 +458,23 @@ select {
     padding: 12px 0 12px 0;
     font-family: "trek";
     color: aqua;
+    font: x-small;
 }
 
 .zap {
     font-family: "trek";
-    color: aqua;
+    color: black;
+    margin-left: 70%;
+    padding: 1%;
+    cursor: crosshair;
+    transform-style: none;
+    transition: none;
+    background: linear-gradient(to right, rgba(212, 95, 16, 0.7) 0%, rgba(212, 95, 16, 1) 50%, rgba(212, 95, 16, 0.7) 100%);
+    &:hover {
+      opacity: .6;
+      transform: none;
+      animation: none;
+    }
 }
 
 .notez {
