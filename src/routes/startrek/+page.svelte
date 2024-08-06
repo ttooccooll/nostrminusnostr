@@ -132,13 +132,13 @@
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
             const requiredWords = [
-                "star trek", "trekkie", "picard", "kirk", "deep space nine",
-                "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
-                "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
-                "prime directive"
-                // "science", "chemistry", "physics", "biology", "zoology", "astronomy",
-                // "geology", "oceanography", "biochemistry", "microbiology", "botany",
-                // "nasa", "seti"
+                // "star trek", "trekkie", "picard", "kirk", "deep space nine",
+                // "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
+                // "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
+                // "prime directive", "riker"
+                "science", "chemistry", "physics", "biology", "zoology", "astronomy",
+                "geology", "oceanography", "biochemistry", "microbiology", "botany",
+                "nasa", "seti"
             ];
 
             const includesRequiredWord = requiredWords.some(word => {
@@ -450,13 +450,21 @@
 {/each}
 
 <div class="prefooter">
-    <div class="inside-prefooter">
+    <div class="inside-prefooterz">
         <p class="text">
             NOSTRMINUSNOSTR presents Star Trek News UNCENSORED
         </p>
+    </div>
+</div>    
+<div class="moreprefooter">
+    <div class="inside-prefooter">
         <p class="date">
             {formattedDate}
         </p>
+    </div>
+</div>
+<div class="mostprefooter">
+    <div class="inside-prefooter">
         <p class="text">
             Welcome to nostrminusnostr, trekkie edition. Here you will find an international feed of sports related content, powered by the internet's most censorship-resistant protocol. There is no need to login if you just hope to catch up on the news. If you are familiar with the practice of zapping, and would like to login, you can use any web-extention signer.
         </p>
