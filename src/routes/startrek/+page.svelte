@@ -135,10 +135,10 @@
                 // "star trek", "trekkie", "picard", "kirk", "deep space nine",
                 // "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
                 // "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
-                // "prime directive", "riker"
+                // "prime directive", "riker", "ferengi"
                 "science", "chemistry", "physics", "biology", "zoology", "astronomy",
                 "geology", "oceanography", "biochemistry", "microbiology", "botany",
-                "nasa", "seti"
+                "nasa", "seti", "space travel", "outer space", "galaxies",
             ];
 
             const includesRequiredWord = requiredWords.some(word => {
@@ -376,20 +376,15 @@
             <p class="loading12"></p>
             {:else}
             {#if isUserLoggedIn}
-                <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                    {#await user.fetchProfile() then events}
-                        <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" alt="" />
-                            <img src={user.profile?.image} class="player" alt="" />
-                            <figcaption class="name">{user.profile?.name}</figcaption>
-                        </div>
-                        <div class="back">
-                            <p class="about">{user.profile?.about}</p>
-                            <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
-                            <figcaption class="name" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</figcaption>
-                        </div>
-                    {/await}
-                </figure>
+                {#await user.fetchProfile() then events}
+                    <div class="balance-card"><div class="balance-content">{user.profile?.name}</div></div>
+                    <p>
+                        <img src={user.profile?.image} on:mouseover={handleHoverb} on:focus={handleFocus} class="click-me" alt="NOPICTURE" />
+                    </p>
+                    <p>{user.profile?.about}</p>
+                    <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
+                    <p class="peep" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</p>
+                {/await}
             {/if}
         {/if}
             <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
@@ -423,26 +418,21 @@
                 {#if isLoading}
                     <p class="loading12"></p>
                 {:else}
-                    <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                        <div class="front">
-                            <img class="team_logo" src="/bitsoccer.png" alt="" />
-                            <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="player" alt=""/>
-                            <figcaption class="name">{combinedEvent.kind0.name}</figcaption>
-                        </div>
-                        <div class="back">
-                            <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
-                            {#if combinedEvent.kind0.website}
-                                <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
-                            {/if}
-                                <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
-                            {#if combinedEvent.kind0.lud06}
-                                <figcaption class="name" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy ">{combinedEvent.kind0.lud06}</figcaption>
-                            {/if}
-                            {#if combinedEvent.kind0.lud16}
-                                <figcaption class="name" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy ">{combinedEvent.kind0.lud16}</figcaption>
-                            {/if}
-                        </div>
-                    </figure>
+                    <div class="balance-card"><div class="balance-content">{combinedEvent.kind0.name}</div></div>
+                    <p>
+                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(combinedEvent.kind1)} on:mouseover={handleHoverb} on:focus={handleFocus}/>
+                    </p>
+                    <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
+                    {#if combinedEvent.kind0.website}
+                        <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
+                    {/if}
+                    <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
+                    {#if combinedEvent.kind0.lud06}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy ">{combinedEvent.kind0.lud06}</p>
+                    {/if}
+                    {#if combinedEvent.kind0.lud16}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy ">{combinedEvent.kind0.lud16}</p>
+                    {/if}
                 {/if}
             </div>
         {/if}

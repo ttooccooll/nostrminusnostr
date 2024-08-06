@@ -78,6 +78,77 @@ h1 {
   font-family: "trek";
 }
 
+.balance-card {
+  position: relative;
+  background: linear-gradient(to right, rgba(55, 135, 254, 0.7) 0%, rgba(55, 135, 254, 1) 50%, rgba(55, 135, 254, 0.7) 100%);
+  width: 35%;
+  height: 3em;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 5%;
+  margin-right: 5%;
+  border-radius: 20px;
+}
+
+.balance-card::before {
+  content: "";
+  background-color: #000000;
+  border-color: #000000;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: 5px;
+}
+
+.balance-card h2 {
+  font-size: 1.2em;
+}
+
+.balance-card p {
+  font-size: 1.2em;
+  font-family: 'MyFont';
+  background-color: black;
+  border-color: #000000;
+  color: rgb(139, 139, 139);
+  height: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 3%;
+  margin-right: 3%;
+  padding: 0% 3% 0% 3%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 9em;
+}
+
+.balance-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 5px 5px 5px;
+  color: black;
+}
+
+.peep {
+  font-size: 8px;
+  overflow-wrap: break-word;
+}
+
+a .peep {
+  font-size: 16px;
+}
+
+.about {
+  font-size: 16px;
+}
+
 p {
     color: aqua;
     font-family: "trek";
@@ -275,165 +346,9 @@ footer .footz {
   border-bottom-right-radius: 0px;
   margin: 0% 0% 0% 0%;
   padding: 0;
-}
-
-.card {
-  margin-bottom:20px;
-  position: relative;
-  height: 300px;
-  width: 200px;
-  border: 15px lightblue solid;
-  transform-style: preserve-3d;
-  transition: transform 0.2s;
-  
-  &:before, &:after {
-    content: '';
-  }
-  
-  &:before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 8;
-    
-    border-top: 60px solid lightblue;
-    border-right: 60px solid transparent;
-  }
-  
-  &:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 5;
-    border-top: 62px solid rgb(0, 0, 0);
-    border-right: 62px solid transparent;
-  }
-  
-  .team_logo {
-    position: absolute;
-    z-index: 15;
-    width:60px;
-    border-radius:50%;    
-    top: 0px;
-    left: 0px;
-  }
-  
-  .player {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    height: 296px;
-    width: 196px;
-    border: 2px rgb(0, 0, 0) solid;
-  }
-  
-  figcaption {
-    line-height: 16px;
-    position: absolute;
-    bottom: -10px;
-    right: 0;
-    width: 66%;
-    height: 30px;
-    text-align: center;
-    font-size: 90%;
-    background: rgb(195, 67, 67);
-    border: 2px rgb(0, 0, 0) solid;
-    z-index: 10;
-    font-family: "trek";
-
-    &:before, &:after {
-      content: '';
-    }
-    
-    &:before {
-      position: absolute;
-      bottom: 32px;
-      right: -2px;
-      z-index: 18;
-      border-bottom: 15px solid lightblue;
-      border-left: 15px solid transparent;
-    }
-
-    &:after {
-      position: absolute;
-      bottom: 32px;
-      right: -2px;
-      z-index: 15;
-      border-bottom: 17px solid rgb(0, 0, 0);
-      border-left: 17px solid transparent;
-    }
-  }
-}
-
-.card.flipped {
-    transform: rotateY(180deg);
-}
-
-.front, .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-}
-
-.back {
-    transform: rotateY(180deg);
-    background-color: rgb(184, 88, 232);
-    font-weight: bolder;
-    padding: 2px;
-    overflow: scroll;
-    word-break: break-all;
-    border: 2px rgb(0, 0, 0) solid;
-}
-
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  outline: 0;
-  border: 0 !important;
-  background: #2c3e50;
-  background-image: none;
-}
-select::-ms-expand {
-  display: none;
-}
-.select {
-  position: relative;
   display: flex;
-  width: 230px;
-  height: 3em;
-  line-height: 3;
-  background: #2c3e50;
-  overflow: hidden;
-  border-radius: .25em;
-  margin-bottom:20px
+  flex-direction: column;
 }
-select {
-  flex: 1;
-  padding: 0 .5em;
-  color: #fff;
-  cursor: pointer;
-}
-.select::after {
-  content: '\25BC';
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0 1em;
-  background: #34495e;
-  cursor: pointer;
-  pointer-events: none;
-  -webkit-transition: .25s all ease;
-  -o-transition: .25s all ease;
-  transition: .25s all ease;
-}
-.select:hover::after {
-  color: lightblue;
-}
-
 
 .notes {
     color: #2f2f2f;
@@ -442,12 +357,13 @@ select {
     box-shadow: none;
     background-color: #000000;
     border: 10px solid black transparent;
-    border-radius: 80px;
+    border-radius: 800px;
     border-left-width: 45px;
     border-right-width: 45px;
     padding: 5%;
     background: linear-gradient(to right, rgba(206, 151, 18, 0.7) 0%, rgba(206, 151, 18, 1) 50%, rgba(206, 151, 18, 0.7) 100%);
     border-radius: 5px;
+    max-width: 90%;
 }
 
 .notess {
@@ -472,6 +388,7 @@ select {
       opacity: .6;
       transform: none;
       box-shadow: none;
+      font-size: none;
     }
 }
 
