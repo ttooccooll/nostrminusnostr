@@ -132,13 +132,13 @@
         sub.on('event', (receivedEvent) => {
             const content = receivedEvent.content;
             const requiredWords = [
-                // "star trek", "trekkie", "picard", "kirk", "deep space nine",
-                // "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
-                // "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
-                // "prime directive", "riker", "ferengi"
-                "science", "chemistry", "physics", "biology", "zoology", "astronomy",
-                "geology", "oceanography", "biochemistry", "microbiology", "botany",
-                "nasa", "seti", "space travel", "outer space", "galaxies",
+                "star trek", "trekkie", "picard", "kirk", "deep space nine",
+                "deep space 9", "tng", "ds9", "klingon", "stv", "star trek voyager",
+                "janeway", "sisco", "klingon", "spock", "vulcan", "romulan",
+                "prime directive", "riker", "ferengi"
+                // "science", "chemistry", "physics", "biology", "zoology", "astronomy",
+                // "geology", "oceanography", "biochemistry", "microbiology", "botany",
+                // "nasa", "seti", "space travel", "outer space", "galaxies",
             ];
 
             const includesRequiredWord = requiredWords.some(word => {

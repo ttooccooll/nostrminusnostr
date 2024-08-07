@@ -105,11 +105,9 @@ h1 {
 }
 
 .balance-card h2 {
-  font-size: 1.2em;
 }
 
 .balance-card p {
-  font-size: 1.2em;
   font-family: 'MyFont';
   background-color: black;
   border-color: #000000;
@@ -137,7 +135,7 @@ h1 {
 }
 
 .peep {
-  font-size: 8px;
+  font-size: 10px;
   overflow-wrap: break-word;
 }
 
@@ -383,12 +381,13 @@ footer .footz {
     cursor: crosshair;
     transform-style: none;
     transition: none;
+    font-size: large;
     background: linear-gradient(to right, rgba(9, 70, 238, 0.7) 0%, rgba(9, 70, 238, 1) 50%, rgba(9, 70, 238, 0.7) 100%);
     &:hover {
       opacity: .6;
       transform: none;
       box-shadow: none;
-      font-size: none;
+      font-size: large;
     }
 }
 
