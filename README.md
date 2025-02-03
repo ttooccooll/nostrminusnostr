@@ -7,7 +7,7 @@ npub1a95w2zch0gqfa0vhlgygz0xklwxccw6st88qkmhsk8d3tke2sqaqamsnzq
 
 
 Check it out:
-https://nostrminusnostr.vercel.app/
+https://nostrminusnostr.com/
 
 Contribute:
 https://github.com/ttooccooll/nostrminusnostr/issues

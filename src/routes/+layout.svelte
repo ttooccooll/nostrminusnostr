@@ -24,10 +24,10 @@
 </footer>
 
 <nav>
-  <a class="navs" href="http://nostrminusnostr.vercel.app">Home</a>
-  <a class="navs" href="http://nostrminusnostr.vercel.app/pizza">Pizza Party</a>
-  <a class="navs" href="http://nostrminusnostr.vercel.app/sports">Sports</a>
-  <a class="navs" href="http://nostrminusnostr.vercel.app/kittens">Kittens</a>
+  <a class="navs" href="http://nostrminusnostr.com">Home</a>
+  <a class="navs" href="http://nostrminusnostr.com/pizza">Pizza Party</a>
+  <a class="navs" href="http://nostrminusnostr.com/sports">Sports</a>
+  <a class="navs" href="http://nostrminusnostr.com/kittens">Kittens</a>
   <a class="navs" href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
-  <a class="navs" href="http://nostrminusnostr.vercel.app/gm">GM</a>
+  <a class="navs" href="http://nostrminusnostr.com/gm">GM</a>
 </nav>
