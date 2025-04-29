@@ -404,4 +404,19 @@
             </div>
         {/if}
     </div>
+
+    <footer>
+        <p class="text">
+            NOSTRMINUSNOSTR presents GM hell
+        </p>
+        <p class="date">
+            {formattedDate}
+        </p>
+        <p class="text">
+            Welcome to nostrminusnostr, GM edition. Here you will find an international feed of gm related content, powered by the internet's most censorship-resistant protocol. There is no need to login if you just hope to catch up on the news. If you are familiar with the practice of zapping, and would like to login, you can use any web-extention signer.
+        </p>
+        <p class="date">
+            It takes a moment to load up the notes. Please be patient and know that if you can still read the "hold your horses" statements above, the program is still loading.
+        </p>
+    </footer>
 {/each}
