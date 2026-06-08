@@ -8,7 +8,7 @@
     import './pizza.css';
 
     const ndk = new NDK({
-        explicitRelayUrls: [ "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.damus.io", "wss://purplepag.es", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.8777.ch", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://yabu.me", "wss://relay.nostr.sc", "wss://nostr.land", "wss://relay.nostr.info", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.javi.space", "wss://no.str.cr", "wss://relay.nostrati.com", "wss://relay.nostr.com.au", "wss://relay.nip05.cf", "wss://nostr.oxtr.dev" ],
+        explicitRelayUrls: [ "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.damus.io", "wss://purplepag.es", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.8777.ch", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://yabu.me", "wss://relay.nostr.sc", "wss://nostr.land", "wss://relay.nostr.info", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.javi.space", "wss://no.str.cr", "wss://relay.nostrati.com", "wss://relay.nostr.com.au", "wss://relay.nip05.cf", "wss://nostr.oxtr.dev", "wss://relay.0xchat.com", "wss://nostr.688.io", "wss://relay.orangepill.dev", "wss://atlas.nostr.land", "wss://relay.shitforce.one", "wss://relay.kyjdonline.com" ],
     });
 
     let isLoading = true;
