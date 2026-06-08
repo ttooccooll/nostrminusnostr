@@ -7,6 +7,15 @@
     <slot />
 </div>
 
+<nav>
+  <a class="navs" href="/">Home</a>
+  <a class="navs" href="/pizza">Pizza Party</a>
+  <a class="navs" href="/sports">Sports</a>
+  <a class="navs" href="/kittens">Kittens</a>
+  <a class="navs" href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
+  <a class="navs" href="/gm">GM</a>
+</nav>
+
 <footer>
   <div class="footz">
     <p>
@@ -22,12 +31,3 @@
     </p>
   </div>
 </footer>
-
-<nav>
-  <a class="navs" href="/">Home</a>
-  <a class="navs" href="/pizza">Pizza Party</a>
-  <a class="navs" href="/sports">Sports</a>
-  <a class="navs" href="/kittens">Kittens</a>
-  <a class="navs" href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
-  <a class="navs" href="/gm">GM</a>
-</nav>
