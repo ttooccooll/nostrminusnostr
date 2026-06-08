@@ -9,7 +9,7 @@
     import { gsap } from 'gsap';
 
     const ndk = new NDK({
-        explicitRelayUrls: [ "wss://relay.bitcoinpark.com", "wss://relay.f7z.io", "wss://relay.nostr.info", "wss://nostr.fmt.wiz.biz", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.nostr.band", "wss://relay.damus.io", "wss://purplepag.es", "wss://history.nostr.watch", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.8777.ch", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.javi.space", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://relay.current.fyi", "wss://relay.ditto.blue", "wss://relay.nostr.bg", "wss://yabu.me", "wss://brb.io", "wss://relay.nostr.sc", "wss://nostr.land" ],
+        explicitRelayUrls: [ "wss://relay.nostr.info", "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.damus.io", "wss://purplepag.es", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.8777.ch", "wss://relay.exit.pub", "wss://nostr.yuv.al", "wss://nostr.javi.space", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://yabu.me", "wss://relay.nostr.sc", "wss://nostr.land", "wss://no.str.cr", "wss://relay.nostrati.com", "wss://relay.nostr.com.au", "wss://relay.nip05.cf", "wss://nostr.oxtr.dev" ],
     });
 
     let isLoading = true;
