@@ -8,7 +8,6 @@
 </div>
 
 <nav>
-  <a class="navs" href="/">Home</a>
   <a class="navs" href="/pizza">Pizza Party</a>
   <a class="navs" href="/sports">Sports</a>
   <a class="navs" href="/kittens">Kittens</a>
