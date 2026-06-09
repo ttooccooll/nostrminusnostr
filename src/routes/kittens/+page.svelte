@@ -36,29 +36,7 @@
         });
     }
     
-    const eventsPromise = ndk.fetchEvents({kinds:[1], npub:[
-        "npub1sg6plzptd64u62a878hep2kev88swjh3tw00gjsfl8f237lmu63q0uf63m",
-        "npub1a2cww4kn9wqte4ry70vyfwqyqvpswksna27rtxd8vty6c74era8sdcw83a",
-        "npub18psflzah8gjq54t4zyjhezghzg9pvpjhm894f4yex9wpl79t3uxq03v73m",
-        "npub1qny3tkh0acurzla8x3zy4nhrjz5zd8l9sy9jys09umwng00manysew95gx",
-        "npub1lrnvvs6z78s9yjqxxr38uyqkmn34lsaxznnqgd877j4z2qej3j5s09qnw5",
-        "npub1cn4t4cd78nm900qc2hhqte5aa8c9njm6qkfzw95tszufwcwtcnsq7g3vle",
-        ]});
-    const profilesPromise = ndk.fetchEvents({kinds:[0]});
 
-    eventsPromise.then(fetchedEvents => {
-        events = fetchedEvents;
-        isLoading = false;
-    }).catch(error => {
-        isLoading = false;
-    });
-
-    profilesPromise.then(fetchedEvents => {
-        events = fetchedEvents;
-        isLoading = false;
-    }).catch(error => {
-        isLoading = false;
-    });
 
 
 
@@ -224,6 +202,7 @@
 
         sub.on('eose', () => {
             console.log('End of stream for sub');
+            isLoading = false;
             matchedEvents.forEach(event => {
                 distributeCombinedEvents(combinedEvents[event.pubkey]);
             });

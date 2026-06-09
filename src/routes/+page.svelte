@@ -35,22 +35,7 @@
         });
     }
     
-    const eventsPromise = ndk.fetchEvents({kinds:[1]});
-    const profilesPromise = ndk.fetchEvents({kinds:[0]});
 
-    eventsPromise.then(fetchedEvents => {
-        events = fetchedEvents;
-        isLoading = false;
-    }).catch(error => {
-        isLoading = false;
-    });
-
-    profilesPromise.then(fetchedEvents => {
-        events = fetchedEvents;
-        isLoading = false;
-    }).catch(error => {
-        isLoading = false;
-    });
 
 
 
@@ -170,6 +155,7 @@
 
         sub.on('eose', () => {
             console.log('End of stream for sub');
+            isLoading = false;
             matchedEvents.forEach(event => {
                 distributeCombinedEvents(combinedEvents[event.pubkey]);
             });
