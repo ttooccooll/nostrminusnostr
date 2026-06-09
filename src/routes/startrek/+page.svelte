@@ -159,6 +159,7 @@
 
                 subz.on('eose', () => {
                     console.log('End of stream for subz');
+                    subz.stop();
                     distributeCombinedEvents(combinedEvents[hexpubkey]);
                 });
 
