@@ -286,7 +286,7 @@
                         {/if}
                         <p class="text">{@html parseContent(combinedEvent.kind1.content)}</p>
                         <p class="date">{convertTimestamp(combinedEvent.kind1.created_at)}</p>
-                        {#if combinedEvent.kind0.lud06 || combinedEvent.kind0.lud16}
+                        {#if combinedEvent.kind0?.lud06 || combinedEvent.kind0?.lud16}
                             <button class="zap" on:mouseenter={handleHoverzzz} on:focus={handleFocus} on:click={() => zapAction(user, combinedEvent.kind1)}>THUNDER!</button>
                         {/if}
                     </div>
@@ -297,20 +297,20 @@
                 {#if isLoading}
                     <p class="loading">Horses: hold 'em.</p>
                 {:else}
-                    <h2>{combinedEvent.kind0.name}</h2>
+                    <h2>{combinedEvent.kind0?.name}</h2>
                     <p>
-                        <img src={combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(user, combinedEvent.kind1)} on:mouseover={handleHoverb} on:focus={handleFocus}/>
+                        <img src={combinedEvent.kind0?.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png'} class="click-me" alt="NOPICTURE" on:click={() => zapAction(user, combinedEvent.kind1)} on:mouseover={handleHoverb} on:focus={handleFocus}/>
                     </p>
-                    <p class="about">{@html parseContent(combinedEvent.kind0.about)}</p>
-                    {#if combinedEvent.kind0.website}
-                        <a class="peep" href={combinedEvent.kind0.website} target="blank">{combinedEvent.kind0.name}'s Website</a>
+                    <p class="about">{@html parseContent(combinedEvent.kind0?.about)}</p>
+                    {#if combinedEvent.kind0?.website}
+                        <a class="peep" href={combinedEvent.kind0?.website} target="blank">{combinedEvent.kind0?.name}'s Website</a>
                     {/if}
                     <p class="about" on:click={() => copyTextToClipboard(nip19.npubEncode(combinedEvent.kind1.pubkey))} title="Click to copy ">{nip19.npubEncode(combinedEvent.kind1.pubkey)}</p>
-                    {#if combinedEvent.kind0.lud06}
-                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud06)} title="Click to copy ">{combinedEvent.kind0.lud06}</p>
+                    {#if combinedEvent.kind0?.lud06}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0?.lud06)} title="Click to copy ">{combinedEvent.kind0?.lud06}</p>
                     {/if}
-                    {#if combinedEvent.kind0.lud16}
-                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0.lud16)} title="Click to copy ">{combinedEvent.kind0.lud16}</p>
+                    {#if combinedEvent.kind0?.lud16}
+                        <p class="peep" on:click={() => copyTextToClipboard(combinedEvent.kind0?.lud16)} title="Click to copy ">{combinedEvent.kind0?.lud16}</p>
                     {/if}
                 {/if}
             </div>
