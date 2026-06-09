@@ -206,7 +206,7 @@
     async function login() {
         const signer = new NDKNip07Signer;
         ndk.signer = signer;
-        const audio = new Audio('/.mp3');
+        const audio = new Audio('/ding.mp3');
         audio.volume = 0.03;
         audio.play();
         try {
