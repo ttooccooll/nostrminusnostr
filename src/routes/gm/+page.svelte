@@ -134,6 +134,7 @@
                 const capturedEvent = receivedEvent;
 
                 combinedEvents[hexpubkey] = { kind1: capturedEvent, kind0: null };
+                distributeCombinedEvents(combinedEvents[hexpubkey]);
 
                 const subz = ndk.subscribe({ kinds: [0], authors: [hexpubkey] }, { closeOnEose: false });
 
@@ -176,22 +177,29 @@
     const uniqueEventIds = new Set();
 
     function distributeCombinedEvents(combinedEvent) {
-        if (combinedEvent.kind1 && combinedEvent.kind0) {
-            const eventId = combinedEvent.kind1.id;
-            console.log(combinedEvent)
-            if (!uniqueEventIds.has(eventId)) {
-                uniqueEventIds.add(eventId);
-                eventszFromSubscription.push(combinedEvent);
+        if (!combinedEvent.kind1) {
+            return;
+        }
+        const eventId = combinedEvent.kind1.id;
+        console.log(combinedEvent)
+        if (!uniqueEventIds.has(eventId)) {
+            uniqueEventIds.add(eventId);
+            eventszFromSubscription.push(combinedEvent);
 
-                filteredName.push(combinedEvent.kind0.name);
-                filteredPicture.push(combinedEvent.kind0.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png');
-                filteredAbout.push(combinedEvent.kind0.about);
-                filteredWeb.push(combinedEvent.kind0.website);
-                filteredNpub.push(combinedEvent.kind0.npub);
-                filteredNip19.push(combinedEvent.kind0.nip19);
-                filteredLud06.push(combinedEvent.kind0.lud06);
-                filteredLud16.push(combinedEvent.kind0.lud16);
+            filteredName.push(combinedEvent.kind0?.name);
+            filteredPicture.push(combinedEvent.kind0?.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png');
+            filteredAbout.push(combinedEvent.kind0?.about);
+            filteredWeb.push(combinedEvent.kind0?.website);
+            filteredNpub.push(combinedEvent.kind0?.npub);
+            filteredNip19.push(combinedEvent.kind0?.nip19);
+            filteredLud06.push(combinedEvent.kind0?.lud06);
+            filteredLud16.push(combinedEvent.kind0?.lud16);
 
+            eventszStore.set([...eventszFromSubscription]);
+        } else if (combinedEvent.kind0) {
+            const idx = eventszFromSubscription.findIndex(e => e.kind1.id === eventId);
+            if (idx !== -1) {
+                eventszFromSubscription[idx] = { kind1: combinedEvent.kind1, kind0: combinedEvent.kind0 };
                 eventszStore.set([...eventszFromSubscription]);
             }
         }
