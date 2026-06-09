@@ -253,6 +253,7 @@
 
 </script>
 
+{#if !isLoading}
 {#each eventszFromSubscription as combinedEvent}
     <div class="content">
         {#if combinedEvent.kind1 && combinedEvent.kind0}
@@ -303,6 +304,7 @@
         {/if}
     </div>
 {/each}
+{/if}
 
 <div class="content">
     <div class="left">

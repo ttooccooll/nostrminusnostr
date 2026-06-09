@@ -295,6 +295,7 @@
     </div>
 </div>
 
+{#if !isLoading}
 {#each eventszFromSubscription as combinedEvent}
     <div class="contentz">
         {#if combinedEvent.kind1 && combinedEvent.kind0}
@@ -342,6 +343,7 @@
         {/if}
     </div>
 {/each}
+{/if}
 
 <div class="prefooter">
     <div class="inside-prefooterz">
