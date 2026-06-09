@@ -1,13 +1,17 @@
 <script>
-    import { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
+    import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import { convertTimestamp, copyTextToClipboard, generateQRCode, zapAction } from '$lib/utils.js';
-    import ndk from '$lib/ndk.js';
     import './kittens.css';
 
+    const ndk = new NDK({
+        explicitRelayUrls: [ "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.damus.io", "wss://purplepag.es", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://yabu.me", "wss://relay.nostr.sc", "wss://relay.nostr.info", "wss://nostr.oxtr.dev", "wss://relay.0xchat.com" ],
+    });
+
+    let sub = null;
     let isLoading = true;
     let events = []; 
     let user = null;
@@ -93,6 +97,8 @@
         }, 500);
     }
 
+    onDestroy(() => sub?.stop());
+
     onMount(() => {
         document.querySelectorAll('.note .numbering').forEach(item => {
             item.addEventListener('click', handleDestroy);
@@ -102,7 +108,7 @@
     const now = Math.floor(Date.now() / 3000);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1] },
+        sub = ndk.subscribe({ kinds: [1] },
             { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};

@@ -1,14 +1,18 @@
 <script>
-    import { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
+    import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import { convertTimestamp, copyTextToClipboard, generateQRCode, parseContent, zapAction } from '$lib/utils.js';
-    import ndk from '$lib/ndk.js';
     import './star.css';
     import { gsap } from 'gsap';
 
+    const ndk = new NDK({
+        explicitRelayUrls: [ "wss://nostr.mom", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.thank.eu", "wss://nostr.wine", "wss://relay.damus.io", "wss://purplepag.es", "wss://lunchbox.sandwich.farm", "wss://fiatjaf.com", "wss://nostr.8777.ch", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://yabu.me", "wss://relay.nostr.sc", "wss://nostr.land", "wss://relay.nostr.info", "wss://nostr.oxtr.dev", "wss://relay.0xchat.com", "wss://nostr-01.yakihonne.com", "wss://nostr.superfriends.online", "wss://relay.nos.social", "wss://relay.getalby.com", "wss://relay.nostr.net" ],
+    });
+
+    let sub = null;
     let isLoading = true;
     let events = []; 
     let user = null;
@@ -95,6 +99,8 @@
         }, 500);
     }
 
+    onDestroy(() => sub?.stop());
+
     onMount(() => {
         document.querySelectorAll('.note .numbering').forEach(item => {
             item.addEventListener('click', handleDestroy);
@@ -105,7 +111,7 @@
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        const sub = ndk.subscribe({ kinds: [1] }, { closeOnEose: false });
+        sub = ndk.subscribe({ kinds: [1] }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
