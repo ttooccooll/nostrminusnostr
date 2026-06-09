@@ -32,6 +32,7 @@
         ndk.connect().then(() => {
             console.log('Connected');
             requestAnimationFrame(fetchEventFromSub);
+            setTimeout(() => { isLoading = false; }, 15000);
         });
     }
     
