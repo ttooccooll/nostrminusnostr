@@ -104,11 +104,8 @@
         });
     });
 
-    const now = Math.floor(Date.now() / 1000);
-    const lastWeek = now - (7 * 24 * 60 * 60);
-
     function fetchEventFromSub() {
-        sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastWeek }, }, { closeOnEose: false });
+        sub = ndk.subscribe({ kinds: [1] }, { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
 
