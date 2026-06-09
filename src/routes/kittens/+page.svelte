@@ -116,8 +116,8 @@
         };
 
         sub.on('event', (receivedEvent) => {
-            let content = receivedEvent.content;
-            const wordCount = content.split(/\s+/).length;
+            const originalContent = receivedEvent.content;
+            const wordCount = originalContent.split(/\s+/).length;
 
             const replacements = {
                 nostr: "cute kitten",
@@ -145,17 +145,18 @@
                 sats: "puppies"
             };
 
-            for (const [key, value] of Object.entries(replacements)) {
-                const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                content = content.replace(regex, value);
-            }
-
             const excludedWords = Object.keys(replacements);
             const pattern = excludedWords.join("|");
             const regex = new RegExp(pattern, "i");
 
-            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 3 || regex.test(content)) {
+            if (receivedEvent.tags.some(tag => tag[0] === "e") || wordCount < 3 || regex.test(originalContent)) {
                 return;
+            }
+
+            let content = originalContent;
+            for (const [key, value] of Object.entries(replacements)) {
+                const replaceRegex = new RegExp(`\\b${key}\\b`, 'gi');
+                content = content.replace(replaceRegex, value);
             }
 
             receivedEvent.content = content;
@@ -199,7 +200,9 @@
         });
 
         sub.on('eose', () => {
-            console.log('End of stream for sub');
+            console.log('End of stream for sub - kittens page');
+            console.log('Matched events count:', matchedEvents.length);
+            console.log('Combined events keys:', Object.keys(combinedEvents).length);
             isLoading = false;
             matchedEvents.forEach(event => {
                 distributeCombinedEvents(combinedEvents[event.pubkey]);

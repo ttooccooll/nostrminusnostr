@@ -158,7 +158,9 @@
         });
 
         sub.on('eose', () => {
-            console.log('End of stream for sub');
+            console.log('End of stream for sub - GM page');
+            console.log('Matched events count:', matchedEvents.length);
+            console.log('Combined events keys:', Object.keys(combinedEvents).length);
             isLoading = false;
             matchedEvents.forEach(event => {
                 distributeCombinedEvents(combinedEvents[event.pubkey]);
