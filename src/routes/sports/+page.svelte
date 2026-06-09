@@ -320,7 +320,6 @@
             <p class="loading1">If you can read this, I'm still loading up some news. Please hold your horses for just one moment.</p>
             {:else}
             {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
                     <div class="note" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
                         <p class="date">Congrats! You have successfully logged into nostrminusnostr. You can now see your own beautiful profile picture and zap some notes. Zaps on nostrminusnostr are always for 2000 sats. Why, you ask? I want you to only zap content that you really like, and I want it to actually make an impact for the writer. Given the size of the zaps, let's call them thunderbolts. I know that's not a real thing. Lightning has the bolts and thunder's just the noise, but hey, it sounds cooler.</p>
@@ -328,7 +327,6 @@
                         <p class="date">That's right! What nostr really needs is less nostr talk. It's too recursive. So...I've censored that out for you. Welcome to a highly censored client on the world's most censorship-resistant protocol. Face it, you're aunt Lisa will never enjoy spending time on nostr reading about nostr. But she might enjoy reading stuff here.</p>
                         <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
                     </div>
-                {/await}
             {/if}
         {/if}
     </div>
@@ -338,7 +336,6 @@
             {:else}
             {#if isUserLoggedIn}
                 <figure class="card" on:mouseenter={flipCard} on:mouseleave={flipBackCard}>
-                    {#await user.fetchProfile() then events}
                         <div class="front">
                             <img class="team_logo" src="/bitsoccer.png" alt="" />
                             <img src={user.profile?.image} class="player" alt="" />
@@ -349,7 +346,6 @@
                             <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
                             <figcaption class="name" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</figcaption>
                         </div>
-                    {/await}
                 </figure>
             {/if}
         {/if}

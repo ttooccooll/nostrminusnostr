@@ -269,7 +269,6 @@
             <p class="loading1">If you can read this, I'm still loading up some news. Please hold your horses for just one moment.</p>
             {:else}
             {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
                     <div class="notes" on:mouseenter={handleHover} on:mouseleave={handleMouseLeave} on:focus={handleFocus} role="button" tabindex="0">
                       <div class="notess">
                         <p class="numbering" on:mouseover={handleHoverz} on:click={handleDestroy} on:focus={handleFocus} >Discard</p>
@@ -279,7 +278,6 @@
                         <p class="text">If you don't like all my rules, no worries. Find another client. Best of luck finding this campy UI anywhere else in the nostrverse!</p>
                       </div>
                     </div>
-                {/await}
             {/if}
         {/if}
     </div>
@@ -288,7 +286,6 @@
             <p class="loading12"></p>
             {:else}
             {#if isUserLoggedIn}
-                {#await user.fetchProfile() then events}
                     <div class="balance-card"><div class="balance-content">{user.profile?.name}</div></div>
                     <p>
                         <img src={user.profile?.image} on:mouseover={handleHoverb} on:focus={handleFocus} class="click-me" alt="NOPICTURE" />
@@ -296,7 +293,6 @@
                     <p>{user.profile?.about}</p>
                     <a class="peep" href={user.profile?.website} target="blank">Here's a link to your Website!</a>
                     <p class="peep" on:click={() => copyTextToClipboard(user.profile?.lud16)} title="Click to copy">{user.profile?.lud16}</p>
-                {/await}
             {/if}
         {/if}
             <button class="login1" on:click={login} on:mouseover={handleHoverb} on:focus={handleFocus}>Login</button>
