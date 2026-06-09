@@ -274,7 +274,7 @@
 {#if !isLoading}
 {#each eventszFromSubscription as combinedEvent}
     <div class="content">
-        {#if combinedEvent.kind1 && combinedEvent.kind0}
+        {#if combinedEvent.kind1}
             <div class="left">
                 {#if isLoading}
                     <p class="loading">If you can read this, I'm loadin' up some notes right now, so you can go right ahead and hold your horses for just a minute. HOLD YOUR HORSES!</p>
