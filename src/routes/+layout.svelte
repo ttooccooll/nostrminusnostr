@@ -8,11 +8,11 @@
 </div>
 
 <nav>
-  <a class="navs" href="/pizza">Pizza Party</a>
-  <a class="navs" href="/sports">Sports</a>
-  <a class="navs" href="/kittens">Kittens</a>
+  <a class="navs" href="/pizza" data-sveltekit-reload>Pizza Party</a>
+  <a class="navs" href="/sports" data-sveltekit-reload>Sports</a>
+  <a class="navs" href="/kittens" data-sveltekit-reload>Kittens</a>
   <a class="navs" href="https://www.youtube.com/watch?v=sQnoZUR6fvY" target="_blank">Alt Coins</a>
-  <a class="navs" href="/gm">GM</a>
+  <a class="navs" href="/gm" data-sveltekit-reload>GM</a>
 </nav>
 
 <footer>
