@@ -138,6 +138,8 @@
                     try {
                         const parsedContent = JSON.parse(receivedKind0Event.content);
                         combinedEvents[hexpubkey].kind0 = parsedContent;
+                        subz.stop();
+                        distributeCombinedEvents(combinedEvents[hexpubkey]);
                     } catch (error) {
                         console.error("Error parsing content:", error);
                     }
