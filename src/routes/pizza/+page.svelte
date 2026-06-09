@@ -17,15 +17,6 @@
     let user = null;
     let isUserLoggedIn = false;
     let eventszFromSubscription = [];
-    let filteredName = [];
-    let filteredPicture = [];
-    let filteredAbout = [];
-    let filteredWeb = [];
-    let filteredNpub = [];
-    let filteredNip19 = [];
-    let filteredLud06 = [];
-    let filteredLud16 = [];
-    const eventszStore = writable([]);
 
     if (browser) {
         ndk.connect().then(() => {
@@ -60,6 +51,7 @@
     function handleMouseLeave() {
         hoveredNote = null;
         const audio = new Audio('/scrape.mp3');
+        audio.volume = 0.3;
         audio.play();
     }
 
@@ -85,8 +77,8 @@
         const note = event.currentTarget.parentNode;
         note.classList.add('noterun');
         const audio = new Audio('/boom.mp3');
-        audio.play();
         audio.volume = 0.06;
+        audio.play();
         setTimeout(() => {
             const grandparentNode = note.parentNode.parentNode;
             grandparentNode.classList.add('leftrun');
@@ -181,31 +173,15 @@
         console.log(combinedEvent)
         if (!uniqueEventIds.has(eventId)) {
             uniqueEventIds.add(eventId);
-            eventszFromSubscription.push(combinedEvent);
-
-            filteredName.push(combinedEvent.kind0?.name);
-            filteredPicture.push(combinedEvent.kind0?.picture || 'https://www.nicepng.com/png/detail/101-1019050_no-picture-taking-sign.png');
-            filteredAbout.push(combinedEvent.kind0?.about);
-            filteredWeb.push(combinedEvent.kind0?.website);
-            filteredNpub.push(combinedEvent.kind0?.npub);
-            filteredNip19.push(combinedEvent.kind0?.nip19);
-            filteredLud06.push(combinedEvent.kind0?.lud06);
-            filteredLud16.push(combinedEvent.kind0?.lud16);
-
-            eventszStore.set([...eventszFromSubscription]);
+            eventszFromSubscription = [...eventszFromSubscription, combinedEvent];
         } else if (combinedEvent.kind0) {
             const idx = eventszFromSubscription.findIndex(e => e.kind1.id === eventId);
             if (idx !== -1) {
                 eventszFromSubscription[idx] = { kind1: combinedEvent.kind1, kind0: combinedEvent.kind0 };
-                eventszStore.set([...eventszFromSubscription]);
+                eventszFromSubscription = [...eventszFromSubscription];
             }
         }
     }
-
-
-    eventszStore.subscribe(value => {
-        eventszFromSubscription = value;
-    });
 
 
     async function login() {
