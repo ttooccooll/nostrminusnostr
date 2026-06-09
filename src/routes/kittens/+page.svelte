@@ -103,9 +103,10 @@
     });
 
     const now = Math.floor(Date.now() / 1000);
+    const lastMonth = now - (30 * 24 * 60 * 60);
 
     function fetchEventFromSub() {
-        sub = ndk.subscribe({ kinds: [1] },
+        sub = ndk.subscribe({ kinds: [1], created_at: { $gte: lastMonth } },
             { closeOnEose: false });
         let matchedEvents = [];
         let combinedEvents = {};
