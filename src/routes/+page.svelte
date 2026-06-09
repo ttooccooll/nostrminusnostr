@@ -12,7 +12,7 @@
 
     let sub = null;
     let isLoading = true;
-    let events = []; 
+ 
     let user = null;
     let isUserLoggedIn = false;
     let eventszFromSubscription = [];
@@ -26,9 +26,6 @@
     let filteredLud16 = [];
     const eventszStore = writable([]);
 
-    eventszStore.subscribe(value => {
-    });
-
     if (browser) {
         ndk.connect().then(() => {
             console.log('Connected');
@@ -40,6 +37,8 @@
 
 
 
+
+    function handleError() {}
 
     let hoveredNote = null;
 
@@ -104,7 +103,7 @@
         });
     });
 
-    const now = Math.floor(Date.now() / 3000);
+    const now = Math.floor(Date.now() / 1000);
     const lastWeek = now - (7 * 24 * 60 * 60);
 
     function fetchEventFromSub() {

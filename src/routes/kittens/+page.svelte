@@ -13,7 +13,7 @@
 
     let sub = null;
     let isLoading = true;
-    let events = []; 
+ 
     let user = null;
     let isUserLoggedIn = false;
     let eventszFromSubscription = [];
@@ -26,9 +26,6 @@
     let filteredLud06 = [];
     let filteredLud16 = [];
     const eventszStore = writable([]);
-
-    eventszStore.subscribe(value => {
-    });
 
     if (browser) {
         ndk.connect().then(() => {
@@ -105,7 +102,7 @@
         });
     });
 
-    const now = Math.floor(Date.now() / 3000);
+    const now = Math.floor(Date.now() / 1000);
 
     function fetchEventFromSub() {
         sub = ndk.subscribe({ kinds: [1] },
