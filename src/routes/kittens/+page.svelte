@@ -1,15 +1,12 @@
 <script>
-    import NDK, { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
+    import { NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
     import {browser} from '$app/environment';
     import { onMount } from 'svelte';
     import { nip19 } from "nostr-tools";
     import { writable } from 'svelte/store';
     import { convertTimestamp, copyTextToClipboard, generateQRCode, zapAction } from '$lib/utils.js';
+    import ndk from '$lib/ndk.js';
     import './kittens.css';
-
-    const ndk = new NDK({
-        explicitRelayUrls: [ "wss://fiatjaf.com", "wss://relay.damus.io", "wss://relay.primal.net", "wss://nos.lol", "wss://nostr.wine", "wss://relay.snort.social", "wss://eden.nostr.land", "wss://yabu.me", "wss://relay.nostr.sc", "wss://nostr.land", "wss://offchain.pub", "wss://nostr.bitcoiner.social", "wss://nostr.mom", "wss://relay.nostr.info", "wss://relay.0xchat.com", "wss://nostr-01.yakihonne.com", "wss://nostr.superfriends.online", "wss://relay.nos.social" ],
-    });
 
     let isLoading = true;
     let events = []; 
